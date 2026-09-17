@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/footer";
+import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Prima Services",
   description: "Official Website Prima Services",
+  icons: {
+    icon: "/logo-icon.jpeg",
+    shortcut: "/logo-icon.jpeg",
+    apple: "/logo-icon.jpeg",
+  },
 };
 
 export default function RootLayout({
@@ -30,9 +34,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
       </body>
     </html>
   );
