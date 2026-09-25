@@ -12,12 +12,10 @@ export default function PublicLayoutWrapper({
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
 
-  // Jika halaman admin, panggil children saja tanpa Navbar & Footer
   if (isAdminPage) {
     return <>{children}</>;
   }
 
-  // Jika bukan halaman admin, tampilkan Navbar & Footer
   return (
     <>
       <Navbar />
