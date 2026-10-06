@@ -2,583 +2,483 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { 
-  CheckCircle2, 
-  ArrowRight, 
-  ShieldCheck, 
-  Zap, 
-  Headphones, 
-  Bot, 
-  MessageSquare, 
-  Mic, 
-  ArrowUpRight,
-  MessageCircle,
-  PhoneCall,
-  Ticket,
-  Send,
-  Gamepad2,
+import { usePageContent } from '@/lib/use-page-content';
+import {
+  ArrowRight,
+  ShieldCheck,
+  Sparkles,
+  Bot,
+  MessageSquare,
+  Zap,
+  CheckCircle2,
+  Activity,
+  Layers,
   ShoppingBag,
   Building2,
+  Gamepad2,
   GraduationCap,
   Briefcase,
-  HeartPulse
+  HeartPulse,
+  Mic,
+  MessageCircle,
+  PhoneCall,
+  Search,
+  Lock
 } from 'lucide-react';
 
 export default function SobotSolutionPage() {
+  const { content, error } = usePageContent('solutions-sobot');
   const [activeTab, setActiveTab] = useState<'agent' | 'chatbot' | 'voice'>('agent');
-  const [activeContactTab, setActiveContactTab] = useState<'livechat' | 'voice' | 'ticketing' | 'whatsapp'>('livechat');
-  
-  // State untuk tab Industri yang aktif
+  const [activeChannel, setActiveChannel] = useState<'wa' | 'ig' | 'web' | 'voice'>('wa');
   const [activeIndustry, setActiveIndustry] = useState<'retail' | 'financial' | 'gaming' | 'education' | 'enterprise' | 'life'>('retail');
+  const [industryFilter, setIndustryFilter] = useState('');
 
-  // Mapping file video untuk tab AI Features (Bagian Atas)
-  const aiVideoMap = {
-    agent: '/ai-agent.mp4',
-    chatbot: '/chatbot.mp4',
-    voice: '/voice-ai.mp4',
+  const channelMessages = {
+    wa: {
+      channelName: content['channelmessages.wa.channelname'] ?? 'WhatsApp Business API',
+      userMsg: content['channelmessages.wa.usermsg'] ?? 'Halo, saya mau cek status pesanan #ORD-89211 dong.',
+      aiMsg: content['channelmessages.wa.aimsg'] ?? 'Pesanan #ORD-89211 sedang dikirim oleh kurir (JNT) dan diperkirakan tiba hari ini sebelum pukul 17:00 WIB. Klik link untuk lacak live location: sobot.link/track',
+    },
+    ig: {
+      channelName: content['channelmessages.ig.channelname'] ?? 'Instagram Direct Message',
+      userMsg: content['channelmessages.ig.usermsg'] ?? 'Min, produk promo diskon 50% masih ready?',
+      aiMsg: content['channelmessages.ig.aimsg'] ?? 'Masih ready kak! Promo berakhir dalam 2 jam lagi. Mau AI kirimkan langsung katalog & voucher checkout-nya ke DM ini?',
+    },
+    web: {
+      channelName: content['channelmessages.web.channelname'] ?? 'Website Live Chat Widget',
+      userMsg: content['channelmessages.web.usermsg'] ?? 'Bagaimana cara integrasi AI Sobot ke CRM Salesforce kami?',
+      aiMsg: content['channelmessages.web.aimsg'] ?? 'Sangat mudah! Sobot menyediakan Native API & Webhook siap pakai. Tim teknis kami dapat menyelesaikan integrasi dalam < 24 jam.',
+    },
+    voice: {
+      channelName: content['channelmessages.voice.channelname'] ?? 'Voice AI Auto-Call',
+      userMsg: content['channelmessages.voice.usermsg'] ?? '[Voice Call Active] Halo Sobot Assistant...',
+      aiMsg: content['channelmessages.voice.aimsg'] ?? 'Halo Pak Budi! Saya AI Voice Sobot. Jadwal janji temu Anda dengan konsultan kami ditetapkan esok pukul 10:00 WIB. Apakah ingin dikonfirmasi?',
+    },
   };
 
-  // Mapping file video untuk tab Contact Center (Bagian Bawah)
-  const contactVideoMap = {
-    livechat: '/livechat.mp4',
-    voice: '/voice.mp4',
-    ticketing: '/ticketing.mp4',
-    whatsapp: '/whatsapp.mp4',
-  };
-
-  // Data konten untuk masing-masing industri
   const industryData = {
     retail: {
-      title: 'Retail & E-commerce',
-      subtitle: 'Drive conversions with guided shopping and proactive service.',
-      icon: <ShoppingBag className="w-6 h-6" />,
+      title: content['industrydata.retail.title'] ?? 'Retail & E-commerce',
+      subtitle: content['industrydata.retail.subtitle'] ?? 'Tingkatkan konversi penjualan & bantu lacak pesanan otomatis.',
+      icon: <ShoppingBag className="w-5 h-5 text-orange-400" />,
       features: [
-        { title: 'Pre-Purchase', desc: 'Personalized assist, FAQ, product compare.' },
-        { title: 'Purchase', desc: 'Payment help, promo, checkout support.' },
-        { title: 'Post-Purchase', desc: 'Order tracking, return/exchange, warranty.' },
+        { title: content['industrydata.retail.features.01.title'] ?? 'Bantuan Pra-Penjualan', desc: content['industrydata.retail.features.01.desc'] ?? 'Rekomendasi produk personal, FAQ, dan perbandingan harga.' },
+        { title: content['industrydata.retail.features.02.title'] ?? 'Otomatisasi Pembayaran', desc: content['industrydata.retail.features.02.desc'] ?? 'Pengingat keranjang (cart recovery) dan bantuan instruksi bayar.' },
+        { title: content['industrydata.retail.features.03.title'] ?? 'Layanan Purna Jual', desc: content['industrydata.retail.features.03.desc'] ?? 'Lacak resi instan, klaim garansi, dan retur tanpa ribet.' },
       ],
-      illustrationTitle: 'Shopping Assistant & Cart Recovery',
+      illustrationTitle: content['industrydata.retail.illustrationtitle'] ?? 'Shopping Assistant & Cart Recovery',
     },
     financial: {
-      title: 'Financial Services',
-      subtitle: 'Secure, compliant support for banking & fintech.',
-      icon: <Building2 className="w-6 h-6" />,
+      title: content['industrydata.financial.title'] ?? 'Financial Services & Banking',
+      subtitle: content['industrydata.financial.subtitle'] ?? 'Layanan keuangan aman dengan kepatuhan ISO & GDPR.',
+      icon: <Building2 className="w-5 h-5 text-emerald-400" />,
       features: [
-        { title: 'Account & KYC', desc: 'Onboarding, verification, limit & statement requests.' },
-        { title: 'Transaction Help', desc: 'Transfer, dispute, fraud flag & alerts.' },
-        { title: 'Product Education', desc: 'Credit, investment & insurance guidance.' },
+        { title: content['industrydata.financial.features.01.title'] ?? 'KYC & Registrasi', desc: content['industrydata.financial.features.01.desc'] ?? 'Onboarding nasabah, verifikasi dokumen, dan cek limit.' },
+        { title: content['industrydata.financial.features.02.title'] ?? 'Navigasi Transaksi', desc: content['industrydata.financial.features.02.desc'] ?? 'Info mutasi, blokir kartu darurat, dan peringatan fraud.' },
+        { title: content['industrydata.financial.features.03.title'] ?? 'Edukasi Produk', desc: content['industrydata.financial.features.03.desc'] ?? 'Simulasi pinjaman, asuransi, dan panduan investasi.' },
       ],
-      illustrationTitle: 'Secure Banking & Verification Portal',
+      illustrationTitle: content['industrydata.financial.illustrationtitle'] ?? 'Secure Banking & Verification Portal',
     },
     gaming: {
-      title: 'Gaming',
-      subtitle: 'Improve player retention and conversion.',
-      icon: <Gamepad2 className="w-6 h-6" />,
+      title: content['industrydata.gaming.title'] ?? 'Gaming & Entertainment',
+      subtitle: content['industrydata.gaming.subtitle'] ?? 'Dukungan player 24/7 untuk meningkatkan retensi pemain.',
+      icon: <Gamepad2 className="w-5 h-5 text-cyan-400" />,
       features: [
-        { title: 'Around-the-clock Customer Service', desc: 'AI Agent delivers 24/7 assistance for player satisfaction.' },
-        { title: 'Notification Reminders', desc: 'Version updates, membership benefits, events.' },
-        { title: 'Targeted Marketing', desc: 'Cross-channel tags to boost conversions.' },
+        { title: content['industrydata.gaming.features.01.title'] ?? 'Layanan Player 24/7', desc: content['industrydata.gaming.features.01.desc'] ?? 'Penanganan keluhan top-up & bug game secara instan.' },
+        { title: content['industrydata.gaming.features.02.title'] ?? 'Pengingat Event & Update', desc: content['industrydata.gaming.features.02.desc'] ?? 'Notifikasi patch note, membership, dan event khusus.' },
+        { title: content['industrydata.gaming.features.03.title'] ?? 'Pemasaran Segmentasi', desc: content['industrydata.gaming.features.03.desc'] ?? 'Tagging perilaku player untuk promo in-game yang akurat.' },
       ],
-      illustrationTitle: 'Raffle Event • Inushima Paul',
+      illustrationTitle: content['industrydata.gaming.illustrationtitle'] ?? 'Player Support & Event Engagement',
     },
     education: {
-      title: 'Education',
-      subtitle: 'Flexible solutions that support students & staff.',
-      icon: <GraduationCap className="w-6 h-6" />,
+      title: content['industrydata.education.title'] ?? 'Education & University',
+      subtitle: content['industrydata.education.subtitle'] ?? 'Solusi fleksibel untuk mahasiswa, dosen, dan calon pendaftar.',
+      icon: <GraduationCap className="w-5 h-5 text-purple-400" />,
       features: [
-        { title: 'Admission & FAQs', desc: 'Info beasiswa, pendaftaran, jadwal.' },
-        { title: 'Student Services', desc: 'Kehadiran, transkrip, konseling.' },
-        { title: 'Notifications', desc: 'Pengumuman kelas & pembayaran.' },
+        { title: content['industrydata.education.features.01.title'] ?? 'Informasi Pendaftaran', desc: content['industrydata.education.features.01.desc'] ?? 'Bot pendaftaran, info beasiswa, dan syarat masuk.' },
+        { title: content['industrydata.education.features.02.title'] ?? 'Layanan Mahasiswa', desc: content['industrydata.education.features.02.desc'] ?? 'Cek jadwal kuliah, transkrip nilai, dan administrasi.' },
+        { title: content['industrydata.education.features.03.title'] ?? 'Broadcast Otomatis', desc: content['industrydata.education.features.03.desc'] ?? 'Pengumuman ujian, perkuliahan, dan batas pembayaran.' },
       ],
-      illustrationTitle: 'Campus Support System',
+      illustrationTitle: content['industrydata.education.illustrationtitle'] ?? 'Campus AI Support Center',
     },
     enterprise: {
-      title: 'Enterprise Services',
-      subtitle: 'Internal support for IT, HR, and Finance.',
-      icon: <Briefcase className="w-6 h-6" />,
+      title: content['industrydata.enterprise.title'] ?? 'Enterprise & Corporate Services',
+      subtitle: content['industrydata.enterprise.subtitle'] ?? 'Dukungan internal perusahaan untuk IT, HR, dan Finance.',
+      icon: <Briefcase className="w-5 h-5 text-blue-400" />,
       features: [
-        { title: 'IT Helpdesk', desc: 'Tickets, asset & access requests.' },
-        { title: 'HR Services', desc: 'Leave, payroll, benefits.' },
-        { title: 'Finance Ops', desc: 'Invoice, reimbursement, approval.' },
+        { title: content['industrydata.enterprise.features.01.title'] ?? 'IT Helpdesk Automated', desc: content['industrydata.enterprise.features.01.desc'] ?? 'Tiket kendala IT, permintaan akses, dan kuesioner.' },
+        { title: content['industrydata.enterprise.features.02.title'] ?? 'HR Self-Service', desc: content['industrydata.enterprise.features.02.desc'] ?? 'Pengajuan cuti, cek slip gaji, dan info benefit karyawan.' },
+        { title: content['industrydata.enterprise.features.03.title'] ?? 'Finance Operations', desc: content['industrydata.enterprise.features.03.desc'] ?? 'Verifikasi invoice, klaim reimbursement, dan approval.' },
       ],
-      illustrationTitle: 'Internal Employee Assistance',
+      illustrationTitle: content['industrydata.enterprise.illustrationtitle'] ?? 'Internal Employee Assistance Desk',
     },
     life: {
-      title: 'Life Services',
-      subtitle: 'Public & daily services at scale.',
-      icon: <HeartPulse className="w-6 h-6" />,
+      title: content['industrydata.life.title'] ?? 'Public & Life Services',
+      subtitle: content['industrydata.life.subtitle'] ?? 'Pelayanan publik cepat tanggap untuk skala pengguna besar.',
+      icon: <HeartPulse className="w-5 h-5 text-rose-400" />,
       features: [
-        { title: 'Citizen Service', desc: 'Info layanan, pengaduan, status permohonan.' },
-        { title: 'Utilities', desc: 'Tagihan, gangguan, penjadwalan.' },
-        { title: 'Mass Notifications', desc: 'Pemberitahuan darurat & kampanye.' },
+        { title: content['industrydata.life.features.01.title'] ?? 'Layanan Pengaduan', desc: content['industrydata.life.features.01.desc'] ?? 'Penerimaan aduan warga dan penjejakan status laporan.' },
+        { title: content['industrydata.life.features.02.title'] ?? 'Informasi Tagihan Publik', desc: content['industrydata.life.features.02.desc'] ?? 'Cek tagihan listrik/air dan integrasi pembayaran.' },
+        { title: content['industrydata.life.features.03.title'] ?? 'Pemberitahuan Darurat', desc: content['industrydata.life.features.03.desc'] ?? 'Broadcast bencana, informasi cuaca, dan kampanye kesehatan.' },
       ],
-      illustrationTitle: 'Public Utility & Assistance Desk',
+      illustrationTitle: content['industrydata.life.illustrationtitle'] ?? 'Public Utility & Assistance Hub',
     },
   };
 
   const currentIndustry = industryData[activeIndustry];
 
+  const filteredFeatures = currentIndustry.features.filter(
+    (f) =>
+      f.title.toLowerCase().includes(industryFilter.toLowerCase()) ||
+      f.desc.toLowerCase().includes(industryFilter.toLowerCase())
+  );
+
   return (
-    <main className="min-h-screen bg-[#f4f7fb] font-sans pt-28 pb-24 px-6 sm:px-10 text-slate-800">
-      <div className="max-w-7xl mx-auto space-y-20">
-        
-        {/* 1. HERO / BANNER UTAMA */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-8 sm:p-12 lg:p-16">
-          
-          <div className="lg:col-span-7 space-y-6">
-            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-[#e6005c] bg-pink-50 px-3.5 py-1.5 rounded-full">
-              Our Solutions
-            </span>
-            
-            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#0c1f3d] tracking-tight leading-[1.18]">
-              Sobot.io – All In One CRM Omnichannel
+    <main className="min-h-screen bg-[#05070c] font-sans pt-4 sm:pt-6 pb-28 px-4 sm:px-6 lg:px-12 text-slate-100 relative overflow-hidden selection:bg-orange-500 selection:text-white">
+      {error && (
+        <p role="alert" className="relative z-20 mx-auto mb-3 max-w-7xl text-sm text-amber-300">
+          {error}
+        </p>
+      )}
+
+      {/* Dynamic Ambient Blur Glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-tr from-orange-500/20 via-rose-500/10 to-indigo-600/20 blur-[160px] pointer-events-none rounded-full" />
+      <div className="absolute top-[600px] -left-40 w-[600px] h-[600px] bg-blue-600/10 blur-[180px] pointer-events-none rounded-full" />
+      <div className="absolute top-[1200px] -right-40 w-[600px] h-[600px] bg-amber-500/10 blur-[180px] pointer-events-none rounded-full" />
+
+      <div className="max-w-7xl mx-auto space-y-24 relative z-10">
+
+        {/* ================= HERO SECTION ================= */}
+        <div className="relative bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950/90 backdrop-blur-3xl rounded-[3rem] border border-slate-800/80 shadow-[0_20px_90px_rgba(0,0,0,0.8)] p-8 sm:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center overflow-hidden">
+
+          {/* Glowing Top Rainbow Bar */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-orange-500 via-amber-400 to-indigo-500" />
+
+          {/* Left Hero Content */}
+          <div className="lg:col-span-7 space-y-7">
+
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500/15 to-amber-500/15 border border-orange-500/30 text-orange-400 text-xs font-black tracking-widest uppercase shadow-inner">
+              <Sparkles className="w-4 h-4 animate-spin text-orange-400" />
+              <span>{content['hero.span.text-001'] ?? 'Next-Generation AI CRM'}</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl lg:text-[54px] font-black tracking-tight leading-[1.08] text-white">
+              {content['hero.h1.text-001'] ?? 'Sobot.io – All In One'} <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-orange-400 via-amber-300 to-indigo-400 bg-clip-text text-transparent">
+                {content['hero.span.text-002'] ?? 'CRM Omnichannel'}
+              </span>
             </h1>
-            
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
-              An omnichannel AI chatbot helps automate customer service, improve operational efficiency, and cut costs by up to 50%, with ISO 27001, ISO 9001 certification support, GDPR compliance, and is registered as a PSE Kominfo to ensure security, quality, and regulatory compliance.
+
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl font-normal">
+              {content['hero.p.text-001'] ?? 'Otomatiskan layanan pelanggan, tingkatkan efisiensi operasional, dan pangkas biaya operasional hingga'} <span className="font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-lg">{content['hero.span.text-003'] ?? '50%'}</span> {content['hero.p.text-002'] ?? 'dengan dukungan sertifikasi ISO 27001, ISO 9001, kepatuhan GDPR, serta terdaftar resmi PSE Kominfo.'}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <Link
-                href="/contact"
-                className="bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition-all flex items-center gap-2 hover:scale-105 active:scale-95"
+                href={content['hero.link.href-001'] ?? '/contact'}
+                className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-400 text-slate-950 font-black text-sm px-8 py-4 rounded-2xl shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
               >
-                <span>Free Consultation Now</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{content['hero.span.text-004'] ?? 'Free Consultation Now'}</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
+
+              <div className="flex items-center gap-2.5 text-xs font-bold text-slate-200 px-5 py-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 backdrop-blur-md shadow-lg">
+                <ShieldCheck className="w-4.5 h-4.5 text-emerald-400" />
+                <span>{content['hero.span.text-005'] ?? 'ISO 27001 & PSE Kominfo'}</span>
+              </div>
+            </div>
+
+            {/* Live Performance Metrics Bar */}
+            <div className="pt-6 grid grid-cols-3 gap-4 border-t border-slate-800/80 max-w-xl">
+              <div className="bg-slate-950/40 border border-slate-800/60 p-3 rounded-2xl">
+                <p className="text-lg sm:text-2xl font-black text-white">{content['contact.p.text-003'] ?? '99.9%'}</p>
+                <p className="text-[11px] text-slate-400 font-medium">{content['contact.p.text-004'] ?? 'Uptime Guarantee'}</p>
+              </div>
+              <div className="bg-slate-950/40 border border-slate-800/60 p-3 rounded-2xl">
+                <p className="text-lg sm:text-2xl font-black text-emerald-400">{content['contact.p.text-005'] ?? '< 0.2s'}</p>
+                <p className="text-[11px] text-slate-400 font-medium">{content['contact.p.text-006'] ?? 'AI Latency SLA'}</p>
+              </div>
+              <div className="bg-slate-950/40 border border-slate-800/60 p-3 rounded-2xl">
+                <p className="text-lg sm:text-2xl font-black text-amber-400">{content['contact.p.text-007'] ?? '50%'}</p>
+                <p className="text-[11px] text-slate-400 font-medium">{content['contact.p.text-008'] ?? 'Cost Saving'}</p>
+              </div>
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative flex justify-center items-center">
-            <div className="relative w-full max-w-[420px] aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-[#0a182c] via-[#0d2244] to-[#173868] shadow-2xl p-8 flex items-center justify-center border border-slate-800">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none" />
-              
-              <div className="bg-white rounded-2xl px-8 py-5 shadow-2xl flex flex-col items-center justify-center border border-slate-100 z-10 w-48 h-28 relative">
-                <div className="w-16 h-4 mb-1 flex items-center justify-center">
-                  <svg viewBox="0 0 80 20" className="w-full h-full" fill="none">
-                    <path d="M 5 18 Q 40 -5 75 18" stroke="#FACC15" strokeWidth="5" strokeLinecap="round" />
-                  </svg>
+          {/* Right Interactive Omnichannel Demo Simulator */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative mx-auto max-w-[440px]">
+
+              {/* Outer Neon Glow Effect */}
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 rounded-[2.8rem] blur-2xl opacity-40 animate-pulse" />
+
+              {/* Main Demo Window */}
+              <div className="relative bg-slate-950/90 border border-slate-700/80 rounded-[2.5rem] p-6 shadow-2xl backdrop-blur-2xl space-y-5 overflow-hidden">
+
+                {/* Header Window Bar */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center font-black text-slate-950 text-sm shadow-lg">
+                      {content['contact.div.text-001'] ?? 'S'}
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-bold text-white flex items-center gap-2">
+                        {content['contact.h3.text-001'] ?? 'Sobot AI Hub'}
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                      </h3>
+                      <p className="text-[10px] text-slate-400">{content['contact.p.text-009'] ?? 'Pilih channel di bawah untuk simulasi:'}</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">
+                    {content['contact.span.text-006'] ?? 'Online'}
+                  </span>
                 </div>
-                <span className="text-3xl font-black tracking-tight text-[#00A896] font-sans leading-none">
-                  Sobot
-                </span>
+
+                {/* Channel Switcher Buttons */}
+                <div className="grid grid-cols-4 gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
+                  {[
+                    { id: 'wa', label: content['cards.dataset-01.wa.label'] ?? 'WA', icon: <MessageCircle className="w-3.5 h-3.5" /> },
+                    { id: 'ig', label: content['cards.dataset-01.ig.label'] ?? 'IG', icon: <MessageSquare className="w-3.5 h-3.5" /> },
+                    { id: 'web', label: content['cards.dataset-01.web.label'] ?? 'Web', icon: <Zap className="w-3.5 h-3.5" /> },
+                    { id: 'voice', label: content['cards.dataset-01.voice.label'] ?? 'Voice', icon: <PhoneCall className="w-3.5 h-3.5" /> },
+                  ].map((ch) => (
+                    <button
+                      key={ch.id}
+                      onClick={() => setActiveChannel(ch.id as typeof activeChannel)}
+                      className={`flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
+                        activeChannel === ch.id
+                          ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 shadow-md'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                      }`}
+                    >
+                      {ch.icon}
+                      <span>{ch.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Simulated Conversation Body */}
+                <div className="space-y-3 min-h-[200px] flex flex-col justify-center">
+                  <div className="text-[10px] text-slate-400 text-center font-semibold bg-slate-900/50 py-1 rounded-lg border border-slate-800">
+                    {content['contact.div.text-002'] ?? 'Kanal Aktif:'} <span className="text-orange-400">{channelMessages[activeChannel].channelName}</span>
+                  </div>
+
+                  {/* Customer Bubble */}
+                  <div className="flex justify-end">
+                    <div className="bg-slate-800 border border-slate-700 text-slate-200 text-xs p-3.5 rounded-2xl rounded-tr-none max-w-[88%] shadow-md">
+                      {channelMessages[activeChannel].userMsg}
+                    </div>
+                  </div>
+
+                  {/* AI Response Bubble */}
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-800/90 border border-orange-500/30 text-xs p-3.5 rounded-2xl rounded-tl-none space-y-1.5 shadow-lg">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-amber-400 font-bold flex items-center gap-1">
+                        <Bot className="w-3 h-3" /> {content['contact.span.text-007'] ?? 'Sobot AI Agent'}
+                      </span>
+                      <span className="text-emerald-400 text-[9px] font-mono">{content['contact.span.text-008'] ?? 'Respon 0.1s'}</span>
+                    </div>
+                    <p className="text-slate-200 leading-relaxed">
+                      {channelMessages[activeChannel].aiMsg}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Security Footer Badge */}
+                <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-2xl flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-slate-300 text-[11px] font-medium">{content['security.span.text-009'] ?? 'End-to-End Encrypted & GDPR Compliant'}</span>
+                  </div>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                </div>
+
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* 2. SECTION: Best AI */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16">
-          
-          <div className="max-w-3xl mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0c1f3d] tracking-tight mb-2">
-              Best AI, providing human-like service with 80% automation
+        {/* ================= AI ENGINE CAPABILITIES ================= */}
+        <div className="space-y-10">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-xs font-black uppercase tracking-widest text-cyan-400 bg-cyan-500/10 px-4 py-1.5 rounded-full border border-cyan-500/20">
+              {content['features.span.text-010'] ?? 'Core Intelligence'}
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              {content['features.h2.text-001'] ?? '3 Pilar Utama Teknologi AI Sobot'}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              LLMs, Human-like conversations, Omnichannel, High resolution with low hallucinations
+            <p className="text-xs sm:text-sm text-slate-400">
+              {content['features.p.text-010'] ?? 'Solusi otomatisasi lengkap berbasis AI untuk percakapan teks, pesan terstruktur, hingga panggilan suara.'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            <div className="lg:col-span-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                id: 'agent',
+                title: content['cards.dataset-02.agent.title'] ?? 'AI Agent (LLM)',
+                icon: <Bot className="w-7 h-7 text-orange-400" />,
+                desc: content['cards.dataset-02.agent.desc'] ?? 'Memahami bahasa alami kompleks (NLU), melayani penjualan dan customer support 24/7 tanpa halusinasi.',
+                badge: content['cards.dataset-02.agent.badge'] ?? 'Generative AI',
+              },
+              {
+                id: 'chatbot',
+                title: content['cards.dataset-02.chatbot.title'] ?? 'Rule & Flow Chatbot',
+                icon: <MessageSquare className="w-7 h-7 text-cyan-400" />,
+                desc: content['cards.dataset-02.chatbot.desc'] ?? 'Alur percakapan terstruktur presisi tinggi untuk penanganan FAQ, pengumpulan data form, dan ticketing.',
+                badge: content['cards.dataset-02.chatbot.badge'] ?? 'Workflow Bot',
+              },
+              {
+                id: 'voice',
+                title: content['cards.dataset-02.voice.title'] ?? 'Voice AI Calling',
+                icon: <Mic className="w-7 h-7 text-purple-400" />,
+                desc: content['cards.dataset-02.voice.desc'] ?? 'Melakukan panggilan suara alami (inbound & outbound) dengan kemampuan transfer langsung ke agen manusia.',
+                badge: content['cards.dataset-02.voice.badge'] ?? 'Real-Time Voice',
+              },
+            ].map((card) => (
               <div
-                onClick={() => setActiveTab('agent')}
-                className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer border ${
-                  activeTab === 'agent' ? 'bg-[#0a182c] text-white shadow-xl border-slate-800' : 'bg-white text-slate-800 hover:bg-slate-50 border-slate-200 shadow-xs'
+                key={card.id}
+                onClick={() => setActiveTab(card.id as typeof activeTab)}
+                className={`group relative rounded-[2.2rem] p-8 transition-all duration-300 cursor-pointer border backdrop-blur-xl ${
+                  activeTab === card.id
+                    ? 'bg-slate-900 border-orange-500/60 shadow-2xl shadow-orange-500/15 scale-[1.02]'
+                    : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/80'
                 }`}
               >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeTab === 'agent' ? 'bg-white/10 text-cyan-400' : 'bg-slate-100 text-blue-600'}`}>
-                    <Bot className="w-5 h-5" />
+                <div className="flex items-center justify-between mb-6">
+                  <div className="p-4 rounded-2xl bg-slate-800/90 border border-slate-700/70 shadow-inner">
+                    {card.icon}
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="font-extrabold text-base">AI Agent</h3>
-                    <p className={`text-xs leading-relaxed ${activeTab === 'agent' ? 'text-slate-300' : 'text-slate-500'}`}>
-                      Based on advanced LLMs, the best conversational AI features with human-like sales and support skills 24/7 across all your channels.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-xs font-bold pt-1 ${activeTab === 'agent' ? 'text-cyan-400 hover:underline' : 'text-blue-600 hover:underline'}`}>
-                      <span>Learn More</span>
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
+                  <span className="text-[10px] font-bold text-slate-300 bg-slate-800 px-3.5 py-1 rounded-full border border-slate-700">
+                    {card.badge}
+                  </span>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-3">{card.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed font-normal mb-6">{card.desc}</p>
+
+                <div className="flex items-center gap-2 text-xs font-bold text-orange-400 group-hover:translate-x-1.5 transition-transform">
+                  <span>{content['features.span.text-011'] ?? 'Lihat Detail Fitur'}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
-
-              <div
-                onClick={() => setActiveTab('chatbot')}
-                className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer border ${
-                  activeTab === 'chatbot' ? 'bg-[#0a182c] text-white shadow-xl border-slate-800' : 'bg-white text-slate-800 hover:bg-slate-50 border-slate-200 shadow-xs'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeTab === 'chatbot' ? 'bg-white/10 text-cyan-400' : 'bg-slate-100 text-blue-600'}`}>
-                    <MessageSquare className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-extrabold text-base">Chatbot</h3>
-                    <p className={`text-xs leading-relaxed ${activeTab === 'chatbot' ? 'text-slate-300' : 'text-slate-500'}`}>
-                      Deliver faster and more personalized customer experiences with an AI-powered chatbot. Boost team efficiency and drive your business forward.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-xs font-bold pt-1 ${activeTab === 'chatbot' ? 'text-cyan-400 hover:underline' : 'text-blue-600 hover:underline'}`}>
-                      <span>Learn More</span>
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                onClick={() => setActiveTab('voice')}
-                className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer border ${
-                  activeTab === 'voice' ? 'bg-[#0a182c] text-white shadow-xl border-slate-800' : 'bg-white text-slate-800 hover:bg-slate-50 border-slate-200 shadow-xs'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeTab === 'voice' ? 'bg-white/10 text-cyan-400' : 'bg-slate-100 text-blue-600'}`}>
-                    <Mic className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-extrabold text-base">Voice AI</h3>
-                    <p className={`text-xs leading-relaxed ${activeTab === 'voice' ? 'text-slate-300' : 'text-slate-500'}`}>
-                      Unlock scalable engagement via voice AI. Voicebot can handle sophisticated interactions and transfer inbound/outbound calls from AI to human agents.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-xs font-bold pt-1 ${activeTab === 'voice' ? 'text-cyan-400 hover:underline' : 'text-blue-600 hover:underline'}`}>
-                      <span>Learn More</span>
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 flex justify-center">
-              <div className="w-full max-w-[480px] bg-[#f0f8ff] rounded-[32px] p-4 sm:p-6 border border-slate-200/80 shadow-inner flex items-center justify-center relative overflow-hidden">
-                <video
-                  key={aiVideoMap[activeTab]}
-                  src={aiVideoMap[activeTab]}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-auto rounded-2xl shadow-xl object-cover"
-                />
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
 
-        {/* 3. SECTION: Best Contact Center */}
-        <div className="bg-[#0a182c] rounded-[36px] shadow-2xl p-8 sm:p-12 lg:p-16 text-white overflow-hidden border border-slate-800">
-          <div className="max-w-3xl mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 text-white">
-              Best Contact Center, maksimalkan produktivitas agen
-            </h2>
-            <p className="text-xs sm:text-sm text-cyan-400 font-semibold tracking-wider uppercase">
-              Omnichannel
-            </p>
-          </div>
+        {/* ================= INDUSTRY SOLUTIONS ================= */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-[3rem] p-8 sm:p-12 lg:p-16 space-y-12 backdrop-blur-2xl relative overflow-hidden">
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            <div className="lg:col-span-7 bg-[#132644] rounded-3xl p-6 border border-slate-700 shadow-xl overflow-hidden flex items-center justify-center">
-              <video
-                key={contactVideoMap[activeContactTab]}
-                src={contactVideoMap[activeContactTab]}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-auto rounded-2xl shadow-xl object-cover"
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-slate-800 pb-8">
+            <div className="space-y-3 max-w-2xl">
+              <span className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
+                {content['industries.span.text-012'] ?? 'Tailored By Industry'}
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                {content['industries.h2.text-002'] ?? 'Solusi CRM Berdasarkan Sektor Industri'}
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400">
+                {content['industries.p.text-011'] ?? 'Dioptimalkan untuk alur kerja dan kepatuhan spesifik pada sektor bisnis Anda.'}
+              </p>
+            </div>
+
+            {/* Filter Search Input */}
+            <div className="relative min-w-[280px]">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder={content['industries.input.placeholder-001'] ?? 'Cari fitur industri...'}
+                value={industryFilter}
+                onChange={(e) => setIndustryFilter(e.target.value)}
+                className="w-full bg-slate-950/80 border border-slate-700 rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
-
-            <div className="lg:col-span-5 space-y-4">
-              
-              <div
-                onClick={() => setActiveContactTab('livechat')}
-                className={`rounded-3xl p-5 transition-all duration-300 cursor-pointer border ${
-                  activeContactTab === 'livechat' ? 'bg-white text-slate-900 shadow-xl border-white' : 'bg-[#132644] text-white hover:bg-[#183156] border-slate-700'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeContactTab === 'livechat' ? 'bg-blue-50 text-blue-600' : 'bg-white/10 text-cyan-400'}`}>
-                    <MessageCircle className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-extrabold text-sm sm:text-base">Live Chat</h3>
-                    <p className={`text-xs mt-1 ${activeContactTab === 'livechat' ? 'text-slate-600' : 'text-slate-300'}`}>
-                      Satukan chat lintas kanal dengan routing cerdas dan kolaborasi agen.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-[11px] font-bold pt-2 ${activeContactTab === 'livechat' ? 'text-blue-600' : 'text-cyan-400'}`}>
-                      <span>Pelajari Lebih Lanjut &rarr;</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                onClick={() => setActiveContactTab('voice')}
-                className={`rounded-3xl p-5 transition-all duration-300 cursor-pointer border ${
-                  activeContactTab === 'voice' ? 'bg-white text-slate-900 shadow-xl border-white' : 'bg-[#132644] text-white hover:bg-[#183156] border-slate-700'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeContactTab === 'voice' ? 'bg-blue-50 text-blue-600' : 'bg-white/10 text-cyan-400'}`}>
-                    <PhoneCall className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-extrabold text-sm sm:text-base">Voice</h3>
-                    <p className={`text-xs mt-1 ${activeContactTab === 'voice' ? 'text-slate-600' : 'text-slate-300'}`}>
-                      Inbound/outbound, IVR, perekaman, analitik, serta AI copilot untuk agen.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-[11px] font-bold pt-2 ${activeContactTab === 'voice' ? 'text-blue-600' : 'text-cyan-400'}`}>
-                      <span>Pelajari Lebih Lanjut &rarr;</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                onClick={() => setActiveContactTab('ticketing')}
-                className={`rounded-3xl p-5 transition-all duration-300 cursor-pointer border ${
-                  activeContactTab === 'ticketing' ? 'bg-white text-slate-900 shadow-xl border-white' : 'bg-[#132644] text-white hover:bg-[#183156] border-slate-700'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeContactTab === 'ticketing' ? 'bg-blue-50 text-blue-600' : 'bg-white/10 text-cyan-400'}`}>
-                    <Ticket className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-extrabold text-sm sm:text-base">Ticketing</h3>
-                    <p className={`text-xs mt-1 ${activeContactTab === 'ticketing' ? 'text-slate-600' : 'text-slate-300'}`}>
-                      Pelacakan end-to-end, SLA, otomatisasi, dan kolaborasi lintas tim.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-[11px] font-bold pt-2 ${activeContactTab === 'ticketing' ? 'text-blue-600' : 'text-cyan-400'}`}>
-                      <span>Pelajari Lebih Lanjut &rarr;</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                onClick={() => setActiveContactTab('whatsapp')}
-                className={`rounded-3xl p-5 transition-all duration-300 cursor-pointer border ${
-                  activeContactTab === 'whatsapp' ? 'bg-white text-slate-900 shadow-xl border-white' : 'bg-[#132644] text-white hover:bg-[#183156] border-slate-700'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${activeContactTab === 'whatsapp' ? 'bg-emerald-50 text-emerald-600' : 'bg-white/10 text-cyan-400'}`}>
-                    <MessageSquare className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-extrabold text-sm sm:text-base">WhatsApp API</h3>
-                    <p className={`text-xs mt-1 ${activeContactTab === 'whatsapp' ? 'text-slate-600' : 'text-slate-300'}`}>
-                      WA resmi untuk layanan, notifikasi, dan kampanye pemasaran.
-                    </p>
-                    <span className={`inline-flex items-center gap-1 text-[11px] font-bold pt-2 ${activeContactTab === 'whatsapp' ? 'text-emerald-600' : 'text-cyan-400'}`}>
-                      <span>Pelajari Lebih Lanjut &rarr;</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-
-        {/* 4. SECTION: Solutions for Various Industries */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16 space-y-10">
-          
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c1f3d] tracking-tight">
-              Solutions for Various Industries
-            </h2>
-            
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs font-bold text-slate-500">
-              {[
-                { id: 'retail', label: 'Retail & E-commerce' },
-                { id: 'financial', label: 'Financial Services' },
-                { id: 'gaming', label: 'Gaming' },
-                { id: 'education', label: 'Education' },
-                { id: 'enterprise', label: 'Enterprise Services' },
-                { id: 'life', label: 'Life Services' },
-              ].map((ind) => (
-                <button
-                  key={ind.id}
-                  type="button"
-                  onClick={() => setActiveIndustry(ind.id as any)}
-                  className={`px-4 py-2 rounded-full transition cursor-pointer ${
-                    activeIndustry === ind.id
-                      ? 'bg-emerald-500 text-white shadow-md'
-                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                  }`}
-                >
-                  {ind.label}
-                </button>
-              ))}
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-4">
-            
-            <div className="lg:col-span-6 space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          {/* Industry Selector Tabs */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {[
+              { id: 'retail', label: content['cards.dataset-03.retail.label'] ?? 'Retail & E-commerce' },
+              { id: 'financial', label: content['cards.dataset-03.financial.label'] ?? 'Financial Services' },
+              { id: 'gaming', label: content['cards.dataset-03.gaming.label'] ?? 'Gaming' },
+              { id: 'education', label: content['cards.dataset-03.education.label'] ?? 'Education' },
+              { id: 'enterprise', label: content['cards.dataset-03.enterprise.label'] ?? 'Enterprise' },
+              { id: 'life', label: content['cards.dataset-03.life.label'] ?? 'Public Services' },
+            ].map((ind) => (
+              <button
+                key={ind.id}
+                onClick={() => {
+                  setActiveIndustry(ind.id as typeof activeIndustry);
+                  setIndustryFilter('');
+                }}
+                className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                  activeIndustry === ind.id
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 shadow-lg shadow-orange-500/20 scale-105'
+                    : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/60'
+                }`}
+              >
+                {ind.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Active Industry Cards Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
+            <div className="lg:col-span-7 space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-inner">
                   {currentIndustry.icon}
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-[#0c1f3d]">
-                    {currentIndustry.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 font-medium">{currentIndustry.subtitle}</p>
+                  <h3 className="text-2xl font-black text-white">{currentIndustry.title}</h3>
+                  <p className="text-xs text-slate-400 font-medium">{currentIndustry.subtitle}</p>
                 </div>
               </div>
 
-              <div className="space-y-4 text-xs sm:text-sm text-slate-600">
-                {currentIndustry.features.map((feat, fIdx) => (
-                  <div key={fIdx} className="flex items-start gap-3">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                    <div>
-                      <strong className="text-slate-900 block mb-0.5">{feat.title}</strong>
-                      <p className="text-slate-500">{feat.desc}</p>
+              <div className="space-y-3.5">
+                {filteredFeatures.length > 0 ? (
+                  filteredFeatures.map((feat, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-slate-950/60 border border-slate-800 hover:border-slate-700 p-4 rounded-2xl flex items-start gap-3.5 transition-colors"
+                    >
+                      <div className="w-2.5 h-2.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                      <div>
+                        <h4 className="text-sm font-extrabold text-white">{feat.title}</h4>
+                        <p className="text-xs text-slate-400 mt-0.5">{feat.desc}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-xs text-slate-500 italic py-4">{content['industries.p.text-012'] ?? 'Tidak ada fitur yang cocok dengan kata kunci pencarian.'}</p>
+                )}
               </div>
             </div>
 
-            <div className="lg:col-span-6 flex justify-center">
-              <div className="w-full max-w-[420px] bg-[#f8fafc] rounded-3xl p-8 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center relative min-h-[280px]">
-                <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-700 p-2.5 rounded-full shadow-xs">
-                  <span className="text-xs font-bold">📢 Solution</span>
-                </div>
-                <div className="text-center space-y-3">
-                  <div className="w-20 h-20 bg-emerald-100 rounded-full mx-auto flex items-center justify-center text-3xl">🚀</div>
-                  <div className="bg-white px-5 py-3 rounded-2xl shadow-sm border border-slate-200 inline-block">
-                    <p className="text-xs font-extrabold text-slate-800">{currentIndustry.illustrationTitle}</p>
-                  </div>
-                  <p className="text-[11px] text-slate-400">Automated workflow active for {currentIndustry.title}.</p>
-                </div>
+            {/* Industry Feature Callout Box */}
+            <div className="lg:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-slate-800 p-8 rounded-[2.2rem] text-center space-y-5 shadow-xl relative">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400 shadow-md">
+                <Layers className="w-7 h-7" />
               </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* 5. SECTION: Cover All Engagement Scenarios & ROI */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16 space-y-12">
-          
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0c1f3d] tracking-tight mb-2">
-              Cover All Engagement Scenarios
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-[#f0fdf4] rounded-3xl p-8 border border-emerald-100 flex flex-col justify-between gap-6 shadow-xs">
-              <div className="space-y-3">
-                <h3 className="text-xl font-black text-[#0c1f3d]">AI & Automation</h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Sobot AI, like the best agent, instantly handles complex inquiries across all customer touchpoints. It can also build AI workflows that enable you to support your customers at scale, as well as free your team for more complicated and important work.
+              <div>
+                <h4 className="text-base font-bold text-white mb-1">{currentIndustry.illustrationTitle}</h4>
+                <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+                  {content['features.p.text-013'] ?? 'Siap diintegrasikan langsung dengan sistem CRM, Database internal, & API eksisting bisnis Anda secara aman.'}
                 </p>
-                <Link href="/contact" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:underline pt-1">
-                  <span>Explore AI &rarr;</span>
+              </div>
+              <div className="pt-2">
+                <Link
+                  href={content['features.link.href-002'] ?? '/contact'}
+                  className="inline-flex items-center gap-2 text-xs font-bold text-orange-400 hover:text-orange-300 transition-colors"
+                >
+                  <span>{content['features.span.text-013'] ?? 'Minta Demo Khusus Industri Ini'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-emerald-100 text-xs font-semibold text-slate-700 flex items-center justify-between">
-                <span>Pre-Purchase • Purchase • Post-Purchase</span>
-              </div>
-            </div>
-
-            <div className="bg-[#f0fdf4] rounded-3xl p-8 border border-emerald-100 flex flex-col justify-between gap-6 shadow-xs">
-              <div className="space-y-3">
-                <h3 className="text-xl font-black text-[#0c1f3d]">Omnichannel Services</h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Centralize all your support channels, customer conversations and bring all your tools together in one AI-powered contact center platform.
-                </p>
-                <Link href="/contact" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:underline pt-1">
-                  <span>Explore Omnichannel &rarr;</span>
-                </Link>
-              </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-emerald-100 flex items-center gap-3">
-                <span className="text-xs font-bold text-slate-800">WhatsApp, Email, Instagram, Live Chat</span>
-              </div>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-slate-100 space-y-8">
-            <div className="text-center">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0c1f3d] tracking-tight">
-                Maximize Return on Investment
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-              <div className="bg-[#f0fdf4] p-6 rounded-2xl border border-emerald-100 shadow-xs space-y-2">
-                <p className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Increase Conversion</p>
-                <h4 className="text-2xl font-black text-emerald-900">+38%</h4>
-                <p className="text-[11px] text-slate-600">Konversi meningkat di setiap tahap customer journey.</p>
-              </div>
-
-              <div className="bg-[#fefce8] p-6 rounded-2xl border border-amber-100 shadow-xs space-y-2">
-                <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">Improve NPS</p>
-                <h4 className="text-2xl font-black text-amber-900">35%</h4>
-                <p className="text-[11px] text-slate-600">Pengalaman pelanggan lebih personal dan memuaskan.</p>
-              </div>
-
-              <div className="bg-[#eff6ff] p-6 rounded-2xl border border-blue-100 shadow-xs space-y-2">
-                <p className="text-[10px] font-bold text-blue-800 uppercase tracking-wider">Resolution Time</p>
-                <h4 className="text-2xl font-black text-blue-900">&lt;1 minute</h4>
-                <p className="text-[11px] text-slate-600">Workflow cerdas hasil kombinasi AI + manusia.</p>
-              </div>
-
-              <div className="bg-[#ccfbf1] p-6 rounded-2xl border border-teal-100 shadow-xs space-y-2">
-                <p className="text-[10px] font-bold text-teal-800 uppercase tracking-wider">ROI</p>
-                <h4 className="text-2xl font-black text-teal-900">234%</h4>
-                <p className="text-[11px] text-slate-600">Tingkatkan pengembalian dari setiap investasi Anda.</p>
-              </div>
-
-              <div className="bg-[#f3e8ff] p-6 rounded-2xl border border-purple-100 shadow-xs space-y-2">
-                <p className="text-[10px] font-bold text-purple-800 uppercase tracking-wider">Improve Efficiency</p>
-                <h4 className="text-2xl font-black text-purple-900">60%</h4>
-                <p className="text-[11px] text-slate-600">Kurangi beban kerja dengan AI Copilot otomatis.</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* 6. SECTION: CTA BANNER */}
-        <div className="relative w-full rounded-[36px] overflow-hidden bg-gradient-to-r from-[#0d2244] via-[#102750] to-[#12233f] shadow-2xl p-8 sm:p-12 lg:p-16 flex flex-col lg:flex-row items-center justify-between text-white border border-slate-800">
-          <div className="space-y-4 max-w-lg z-10 mb-8 lg:mb-0">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-amber-400 tracking-tight">
-              Want to try Sobot.io?
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-              Contact us for a consultation, free demo, and 15-day trial for your business.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center bg-amber-500 hover:bg-amber-400 text-[#0c1f3d] font-bold text-xs sm:text-sm px-6.5 py-3.5 rounded-xl shadow-md transition hover:scale-105 active:scale-95"
-            >
-              Consultation & Get Free Demo
-            </Link>
-          </div>
-
-          <div className="relative z-10 flex items-center justify-center">
-            <div className="relative w-[320px] sm:w-[380px] h-[220px] sm:h-[250px] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-900">
-              <img
-                src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800&auto=format&fit=crop"
-                alt="Sobot Representatives"
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
-          </div>
         </div>
 
       </div>

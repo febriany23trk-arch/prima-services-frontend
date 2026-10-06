@@ -1,422 +1,455 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  ArrowRight, 
-  Rocket, 
-  Brain, 
-  ShieldAlert, 
-  Coins, 
-  Server, 
-  HardDrive, 
-  BarChart3, 
-  Globe2, 
-  Lock, 
-  Cpu
+import { usePageContent } from '@/lib/use-page-content';
+import {
+  ArrowRight,
+  Rocket,
+  Brain,
+  ShieldAlert,
+  Coins,
+  Server,
+  HardDrive,
+  BarChart3,
+  Globe2,
+  Lock,
+  Cpu,
+  CheckCircle2,
+  Sparkles,
+  Zap,
+  Layers,
+  ShieldCheck,
+  Cloud,
+  ChevronRight,
+  Database,
+  Activity,
+  Terminal,
+  Code2,
+  CpuIcon,
+  RefreshCw,
+  Sliders,
+  Check
 } from 'lucide-react';
 
 export default function GoogleCloudPlatformPage() {
+  const { content, error } = usePageContent('solutions-cloud');
+  // State Dinamis untuk Active Tab Blueprint
+  const [activeTab, setActiveTab] = useState<'analytics' | 'microservices' | 'genai'>('analytics');
+
+  // State Dinamis untuk Live Log Terminal
+  const [logs, setLogs] = useState<string[]>([
+    content['live-logs.initial.01'] ?? '[INIT] Connecting to Google Cloud Region asia-southeast2...',
+    content['live-logs.initial.02'] ?? '[INFO] GKE Cluster Autoscaler status: OPTIMAL',
+    content['live-logs.initial.03'] ?? '[INFO] BigQuery streaming buffer active (0.2ms latency)',
+  ]);
+
+  // Simulasi log dinamis berjalan
+  useEffect(() => {
+    const logPool = [
+      content['logpool.01'] ?? '[METRIC] Vertex AI inference response: 12ms',
+      content['logpool.02'] ?? '[SECURITY] Cloud Armor WAF blocked 0 threats',
+      content['logpool.03'] ?? '[FINOPS] Cost optimization engine running...',
+      content['logpool.04'] ?? '[SYNC] AlloyDB replication lag: <1ms',
+      content['logpool.05'] ?? '[BUILD] Cloud Build pipeline #8492 finished'
+    ];
+
+    const interval = setInterval(() => {
+      const randomLog = logPool[Math.floor(Math.random() * logPool.length)];
+      setLogs((prev) => [randomLog, ...prev.slice(0, 2)]);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [content]);
+
+  const initialLogContent = new Map<string, string>([
+    ['[INIT] Connecting to Google Cloud Region asia-southeast2...', content['live-logs.initial.01'] ?? '[INIT] Connecting to Google Cloud Region asia-southeast2...'],
+    ['[INFO] GKE Cluster Autoscaler status: OPTIMAL', content['live-logs.initial.02'] ?? '[INFO] GKE Cluster Autoscaler status: OPTIMAL'],
+    ['[INFO] BigQuery streaming buffer active (0.2ms latency)', content['live-logs.initial.03'] ?? '[INFO] BigQuery streaming buffer active (0.2ms latency)'],
+  ]);
+  const displayedLogs = logs.map((log) => initialLogContent.get(log) ?? log);
+
   return (
-    <main className="min-h-screen bg-[#f8fafc] font-sans pt-28 pb-24 px-6 sm:px-10 text-slate-800">
-      <div className="max-w-7xl mx-auto space-y-20">
-        
-        {/* 1. HERO / BANNER UTAMA */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-8 sm:p-12 lg:p-16">
-          
-          <div className="lg:col-span-7 space-y-6">
-            <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-[#1d4ed8] bg-blue-50 px-3.5 py-1.5 rounded-full">
-              Our Solutions
-            </span>
-            
-            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-[#0c1f3d] tracking-tight leading-[1.18]">
-              Google Cloud for Modern Applications & Data
-            </h1>
-            
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
-              Business email, real-time collaboration, and enterprise-grade security all in one easy-to-use package.
-            </p>
+    <main className="min-h-screen bg-[#050811] font-sans pt-16 pb-8 px-2 sm:px-4 text-slate-100 relative overflow-hidden">
+      {error && (
+        <p role="alert" className="relative z-20 mx-auto mb-3 max-w-7xl text-sm text-amber-300">
+          {error}
+        </p>
+      )}
 
-            <div className="pt-2 flex flex-wrap items-center gap-4">
-              <Link
-                href="/contact"
-                className="bg-[#193d70] hover:bg-[#122e54] text-white text-xs sm:text-sm font-bold px-7 py-3.5 rounded-xl shadow-md transition-all flex items-center gap-2 hover:scale-105 active:scale-95 cursor-pointer"
-              >
-                <span>Free Consultant Now</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/contact"
-                className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs sm:text-sm font-bold px-7 py-3.5 rounded-xl shadow-xs transition-all cursor-pointer"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
+      {/* Background Ambient Glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/15 to-purple-600/10 blur-[100px] pointer-events-none rounded-full" />
+      <div className="absolute top-[30%] -right-20 w-[400px] h-[400px] bg-emerald-500/10 blur-[120px] pointer-events-none rounded-full" />
 
-          <div className="lg:col-span-5 relative flex justify-center items-center">
-            <div className="relative w-full max-w-[480px] aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-[#0a182c] via-[#0d2244] to-[#173868] shadow-2xl p-6 flex flex-col items-center justify-center border border-slate-800">
-              <div className="absolute top-0 right-0 w-36 h-36 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
-              
-              <div className="bg-white rounded-2xl p-5 shadow-2xl border border-slate-100 z-10 w-full flex flex-col items-center space-y-4">
-                <div className="flex items-center justify-center gap-2 flex-wrap max-w-[280px]">
-                  <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm rotate-3">⚡</div>
-                  <div className="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm -rotate-3">🔗</div>
-                  <div className="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm rotate-6">⚙️</div>
-                  <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm">📊</div>
-                  <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 via-red-500 to-amber-400 rounded-xl flex items-center justify-center text-white font-black shadow-md">☁️</div>
-                  <div className="w-9 h-9 bg-emerald-500 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm rotate-3">📈</div>
-                  <div className="w-9 h-9 bg-cyan-600 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm -rotate-6">🔍</div>
-                </div>
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b18_1px,transparent_1px),linear-gradient(to_bottom,#1e293b18_1px,transparent_1px)] bg-[size:2rem_2rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
-                <div className="text-center">
-                  <span className="text-base font-black tracking-widest text-slate-700 uppercase block">Google Cloud Platform</span>
-                </div>
+      <div className="max-w-7xl mx-auto space-y-4 relative z-10">
+
+        {/* HERO BANNER */}
+        <div className="relative bg-slate-900/50 backdrop-blur-md rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-lg overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-red-500 via-amber-400 to-emerald-500" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+
+            <div className="lg:col-span-7 space-y-3 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 text-blue-400 text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                <span>{content['hero.span.text-001'] ?? 'Next-Gen Enterprise Infrastructure'}</span>
               </div>
 
-              <div className="absolute bottom-4 left-6 bg-white rounded-2xl px-5 py-2.5 shadow-xl flex items-center gap-2 border border-slate-100 z-20">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
-                  <path fill="#4285F4" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
-                </svg>
-                <span className="text-xs font-bold text-slate-800">Google Cloud</span>
-              </div>
-            </div>
-          </div>
+              <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+                {content['hero.h1.text-001'] ?? 'Google Cloud'} <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-300">{content['hero.span.text-002'] ?? 'Modern Apps & Data'}</span>
+              </h1>
 
-        </div>
-
-        {/* 2. 4 PILAR UTAMA */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          <div className="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-110 transition-transform">
-              <Rocket className="w-7 h-7" />
-            </div>
-            <h3 className="font-extrabold text-base text-[#0c1f3d]">Scalable by Design</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Scale globally with load balancing, autoscaling, and SRE best practices.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center shadow-lg shadow-pink-500/30 group-hover:scale-110 transition-transform">
-              <Brain className="w-7 h-7" />
-            </div>
-            <h3 className="font-extrabold text-base text-[#0c1f3d]">Data & AI Ready</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              BigQuery, Vertex AI, and the modern analytics ecosystem.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-red-500 to-orange-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 group-hover:scale-110 transition-transform">
-              <ShieldAlert className="w-7 h-7" />
-            </div>
-            <h3 className="font-extrabold text-base text-[#0c1f3d]">Security First</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Granular IAM, VPC-SC, Cloud Armor, SCC, Chronicle.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-7 border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
-              <Coins className="w-7 h-7" />
-            </div>
-            <h3 className="font-extrabold text-base text-[#0c1f3d]">Cost Efficient</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Committed use, autoscale, rightsizing, and routine FinOps.
-            </p>
-          </div>
-
-        </div>
-
-        {/* 3. GOOGLE CLOUD CORE SERVICES */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16 space-y-10">
-          
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c1f3d] tracking-tight mb-2">
-              Google Cloud Core Services
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Choose the right components for your apps, data, and AI.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <Server className="w-7 h-7" />
-              </div>
-              <h3 className="font-extrabold text-base text-slate-900">Compute</h3>
-              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
-                <li>• GKE (Kubernetes)</li>
-                <li>• Cloud Run</li>
-                <li>• Compute Engine</li>
-                <li>• App Engine</li>
-              </ul>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <HardDrive className="w-7 h-7" />
-              </div>
-              <h3 className="font-extrabold text-base text-slate-900">Storage</h3>
-              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
-                <li>• Cloud Storage</li>
-                <li>• Filestore</li>
-                <li>• Persistent Disk</li>
-                <li>• Backup & DR</li>
-              </ul>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <BarChart3 className="w-7 h-7" />
-              </div>
-              <h3 className="font-extrabold text-base text-slate-900">Data & AI</h3>
-              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
-                <li>• BigQuery</li>
-                <li>• Vertex AI</li>
-                <li>• Dataflow / Dataproc</li>
-                <li>• Looker / Data Studio</li>
-              </ul>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <Globe2 className="w-7 h-7" />
-              </div>
-              <h3 className="font-extrabold text-base text-slate-900">Networking</h3>
-              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
-                <li>• VPC, Cloud NAT, Load Balancing</li>
-                <li>• Cloud CDN</li>
-                <li>• Cloud DNS</li>
-                <li>• Cloud Armor / WAF</li>
-              </ul>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <Lock className="w-7 h-7" />
-              </div>
-              <h3 className="font-extrabold text-base text-slate-900">Security</h3>
-              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
-                <li>• IAM, VPC-SC, KMS / HSM</li>
-                <li>• Security Command Center</li>
-                <li>• Chronicle SIEM / SOAR</li>
-              </ul>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center space-y-4 group">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-green-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <Cpu className="w-7 h-7" />
-              </div>
-              <h3 className="font-extrabold text-base text-slate-900">DevOps</h3>
-              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
-                <li>• Cloud Build / Deploy</li>
-                <li>• Artifact Registry</li>
-                <li>• Cloud Logging / Monitoring</li>
-                <li>• SRE playbooks</li>
-              </ul>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* 4. READY-TO-USE ARCHITECTURE & SOLUTIONS */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16 space-y-10">
-          
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c1f3d] tracking-tight mb-2">
-              Ready-to-Use Architecture & Solutions
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Blueprints that we can adapt to your needs.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="bg-[#e0f2fe] rounded-2xl p-4 text-center font-bold text-blue-700 text-xs">
-                  📊 🗄️ Google Architecture Blueprint
-                </div>
-                <h3 className="font-extrabold text-base text-[#0c1f3d]">Modern Data Warehouse</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Centralize, transform, and quickly analyze in BigQuery.
-                </p>
-                <ul className="space-y-1 text-xs text-slate-600 pt-2">
-                  <li>• Batch/streaming ingest (Pub/Sub, Dataflow)</li>
-                  <li>• Modeling & governance (Dataform, Dataplex)</li>
-                  <li>• BI with Looker & self-service data</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="bg-[#fef3c7] rounded-2xl p-4 text-center font-bold text-amber-700 text-xs">
-                  📱 ☁️ Microservices Blueprint
-                </div>
-                <h3 className="font-extrabold text-base text-[#0c1f3d]">Modern App on GKE/Cloud Run</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Microservices architecture with full observability.
-                </p>
-                <ul className="space-y-1 text-xs text-slate-600 pt-2">
-                  <li>• CI/CD: Cloud Build & GitHub Actions</li>
-                  <li>• Service Mesh & Zero-trust (mTLS, IAM)</li>
-                  <li>• Autoscaling, canary, secure rollback</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="bg-[#f8fafc] rounded-3xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="bg-[#fae8ff] rounded-2xl p-4 text-center font-bold text-purple-700 text-xs">
-                  🤖 🧠 Vertex AI GenAI Blueprint
-                </div>
-                <h3 className="font-extrabold text-base text-[#0c1f3d]">GenAI & RAG on Vertex AI</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Chatbot/agent & retrieval for enterprise documents.
-                </p>
-                <ul className="space-y-1 text-xs text-slate-600 pt-2">
-                  <li>• Embeddings + Vector Search</li>
-                  <li>• Guardrails, eval, prompt mgmt</li>
-                  <li>• Monitoring & cost control</li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* 5. MIGRATION & MODERNIZATION WITHOUT DRAMA */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16 space-y-12">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            <div className="lg:col-span-6 space-y-5">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c1f3d] tracking-tight">
-                Migration & Modernization without drama
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Lift-and-shift, replatform, or refactor—we choose the safest and most cost-effective path.
+              <p className="text-xs sm:text-sm text-slate-300 leading-normal max-w-xl">
+                {content['hero.p.text-001'] ?? 'Akselerasi transformasi digital dengan fondasi cloud Google berkecepatan tinggi. Siap untuk microservices, analytics, dan GenAI.'}
               </p>
-              
-              <div className="space-y-3 pt-2 text-xs font-semibold text-slate-700">
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[11px]">01</span>
-                  <span>Discovery & TCO</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[11px]">02</span>
-                  <span>Landing zone & security</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[11px]">03</span>
-                  <span>Pilot workload & cut-over</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[11px]">04</span>
-                  <span>Operational & continuous optimization</span>
-                </div>
+
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <Link
+                  href={content['hero.link.href-001'] ?? '/contact'}
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                >
+                  <span>{content['hero.span.text-003'] ?? 'Konsultasi Gratis'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+
+                <Link
+                  href={content['hero.link.href-002'] ?? '#services'}
+                  className="inline-flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-5 py-2.5 rounded-xl hover:border-slate-500 transition-all cursor-pointer"
+                >
+                  {content['hero.link.text-001'] ?? 'Jelajahi Kapabilitas'}
+                </Link>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800/80 flex flex-wrap gap-4 text-[11px] font-medium text-slate-400">
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> {content['hero.span.text-004'] ?? '99.99% SLA'}</span>
+                <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> {content['hero.span.text-005'] ?? 'ISO 27001 & SOC 2'}</span>
+                <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-amber-400" /> {content['hero.span.text-006'] ?? 'Low Latency'}</span>
               </div>
             </div>
 
-            <div className="lg:col-span-6 flex justify-center">
-              <div className="w-full max-w-[460px] bg-gradient-to-br from-[#0a182c] via-[#0d2244] to-[#173868] rounded-3xl p-8 shadow-2xl border border-slate-800 flex flex-col items-center justify-center relative min-h-[260px] text-white">
-                <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
-                <div className="flex items-center justify-center gap-6 z-10 w-full">
-                  <div className="bg-white/10 backdrop-blur-md px-5 py-4 rounded-2xl border border-white/20 text-center shadow-lg">
-                    <span className="text-2xl block mb-1">☁️</span>
-                    <span className="text-[11px] font-bold text-slate-200">Legacy / On-Prem</span>
+            {/* Terminal Dinamis dengan Live Log */}
+            <div className="lg:col-span-5 relative flex justify-center items-center">
+              <div className="w-full bg-slate-950/90 rounded-2xl border border-slate-800 p-3 shadow-xl space-y-2">
+
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   </div>
-                  <div className="text-2xl animate-pulse text-amber-400 font-bold">➡️</div>
-                  <div className="bg-blue-600/30 backdrop-blur-md px-5 py-4 rounded-2xl border border-blue-400/40 text-center shadow-lg">
-                    <span className="text-2xl block mb-1">☁️</span>
-                    <span className="text-[11px] font-bold text-amber-300">Google Cloud</span>
+                  <span className="font-mono text-[10px] text-slate-400 flex items-center gap-1">
+                    <Terminal className="w-3 h-3 text-blue-400" /> {content['hero.span.text-007'] ?? 'gcp-live-feed'}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[9px] font-bold border border-emerald-500/20 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    {content['hero.span.text-008'] ?? 'LIVE'}
+                  </span>
+                </div>
+
+                {/* Grid Widget */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800/80 space-y-1 hover:border-blue-500/40 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <Server className="w-3.5 h-3.5 text-blue-400" />
+                      <span className="text-[9px] font-mono text-emerald-400">{content['hero.span.text-009'] ?? '0.2ms'}</span>
+                    </div>
+                    <div className="text-xs font-bold text-white">{content['hero.div.text-001'] ?? 'Google GKE'}</div>
+                    <p className="text-[10px] text-slate-400">{content['hero.p.text-002'] ?? 'Autoscaling Active'}</p>
+                  </div>
+
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800/80 space-y-1 hover:border-amber-500/40 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <Database className="w-3.5 h-3.5 text-amber-400" />
+                      <span className="text-[9px] font-mono text-blue-400">{content['hero.span.text-010'] ?? 'Petabyte'}</span>
+                    </div>
+                    <div className="text-xs font-bold text-white">{content['hero.div.text-002'] ?? 'BigQuery'}</div>
+                    <p className="text-[10px] text-slate-400">{content['hero.p.text-003'] ?? 'Data Lakehouse'}</p>
                   </div>
                 </div>
-                <p className="text-xs text-slate-300 font-medium mt-6 z-10">Seamless Cloud Architecture & Data Transfer</p>
+
+                {/* Live Console Output Box */}
+                <div className="bg-slate-900/90 rounded-xl p-2.5 border border-slate-800 font-mono text-[10px] space-y-1">
+                  <div className="text-slate-500 flex items-center justify-between text-[9px] border-b border-slate-800/60 pb-1">
+                    <span>{content['hero.span.text-011'] ?? 'LIVE STREAM LOGS'}</span>
+                    <RefreshCw className="w-2.5 h-2.5 animate-spin text-blue-400" />
+                  </div>
+                  {displayedLogs.map((log, index) => (
+                    <p key={index} className="text-slate-300 truncate transition-all duration-300">
+                      {log}
+                    </p>
+                  ))}
+                </div>
+
               </div>
             </div>
 
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-100">
-            <div className="bg-[#f8fafc] p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-2">
-              <h4 className="font-bold text-sm text-[#0c1f3d]">Committed Reservations</h4>
-              <p className="text-xs text-slate-500">Plan committed usage plans (CUDs) to significantly reduce compute costs.</p>
-            </div>
-            <div className="bg-[#f8fafc] p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-2">
-              <h4 className="font-bold text-sm text-[#0c1f3d]">Rightsizing & Autoscale</h4>
-              <p className="text-xs text-slate-500">Monitor utilization and automatically adjust resources to workloads.</p>
-            </div>
-            <div className="bg-[#f8fafc] p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-2">
-              <h4 className="font-bold text-sm text-[#0c1f3d]">FinOps & Budget Guardrails</h4>
-              <p className="text-xs text-slate-500">Budget, alerting, labeling/tagging, and chargeback between teams.</p>
-            </div>
           </div>
 
         </div>
 
-        {/* 6. SECURITY & COMPLIANCE */}
-        <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-8 sm:p-12 lg:p-16 space-y-8">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c1f3d] tracking-tight mb-2">
-              Security & Compliance
-            </h2>
+        {/* 4 PILAR UTAMA */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { icon: Rocket, title: content['cards.dataset-01.01.title'] ?? 'Scalable by Design', desc: content['cards.dataset-01.01.desc'] ?? 'Skala global otomatis dengan load balancing cerdas & standar SRE.', gradient: "from-orange-500 to-amber-500" },
+            { icon: Brain, title: content['cards.dataset-01.02.title'] ?? 'Data & AI Ready', desc: content['cards.dataset-01.02.desc'] ?? 'BigQuery & Vertex AI terintegrasi untuk kecerdasan bisnis mutakhir.', gradient: "from-pink-500 to-rose-500" },
+            { icon: ShieldAlert, title: content['cards.dataset-01.03.title'] ?? 'Zero-Trust Posture', desc: content['cards.dataset-01.03.desc'] ?? 'Proteksi IAM, VPC Service Controls & Cloud Armor.', gradient: "from-red-500 to-orange-500" },
+            { icon: Coins, title: content['cards.dataset-01.04.title'] ?? 'Cost Efficient', desc: content['cards.dataset-01.04.desc'] ?? 'Optimasi TCO dengan Committed Use Discounts dan FinOps.', gradient: "from-emerald-500 to-teal-500" }
+          ].map((item, index) => (
+            <div key={index} className="bg-slate-900/40 backdrop-blur-md rounded-xl p-3.5 border border-slate-800/80 flex items-start gap-3 hover:bg-slate-900/90 hover:scale-[1.02] hover:border-slate-700 transition-all cursor-pointer">
+              <div className={`w-9 h-9 rounded-lg bg-gradient-to-tr ${item.gradient} text-white flex items-center justify-center shrink-0 shadow-sm`}>
+                <item.icon className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-bold text-xs sm:text-sm text-white">{item.title}</h3>
+                <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight mt-0.5">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CORE SERVICES */}
+        <div id="services" className="bg-slate-900/40 backdrop-blur-md rounded-2xl border border-slate-800 p-4 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div>
+              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">{content['features.span.text-012'] ?? 'Ecosystem Stack'}</span>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white">{content['features.h2.text-001'] ?? 'Google Cloud Core Services'}</h2>
+            </div>
+            <p className="text-xs text-slate-400 hidden sm:block max-w-xs text-right">{content['features.p.text-004'] ?? 'Layanan komprehensif komputasi, storage, keamanan & DevOps.'}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div className="bg-gradient-to-br from-blue-50/70 to-indigo-50/50 p-7 rounded-3xl border border-blue-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-3">
-              <h4 className="font-extrabold text-sm text-blue-900">Identity-Aware Access</h4>
-              <p className="text-xs text-slate-600 leading-relaxed">IAM least-privilege, CA Access, BeyondCorp Enterprise.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { title: content['cards.dataset-02.01.title'] ?? 'Compute Engine', icon: Server, items: [content['cards.dataset-02.01.items.01'] ?? 'Google Kubernetes Engine (GKE)', content['cards.dataset-02.01.items.02'] ?? 'Cloud Run (Serverless)', content['cards.dataset-02.01.items.03'] ?? 'Compute Engine (Custom VMs)', content['cards.dataset-02.01.items.04'] ?? 'App Engine Platform'], accent: "text-blue-400", hover: "hover:border-blue-500/50" },
+              { title: content['cards.dataset-02.02.title'] ?? 'Storage & Databases', icon: HardDrive, items: [content['cards.dataset-02.02.items.01'] ?? 'Cloud Storage (High-Speed)', content['cards.dataset-02.02.items.02'] ?? 'AlloyDB & Cloud SQL', content['cards.dataset-02.02.items.03'] ?? 'Filestore (NFS Enterprise)', content['cards.dataset-02.02.items.04'] ?? 'Persistent Disk & DR'], accent: "text-amber-400", hover: "hover:border-amber-500/50" },
+              { title: content['cards.dataset-02.03.title'] ?? 'Data Analytics & AI', icon: BarChart3, items: [content['cards.dataset-02.03.items.01'] ?? 'BigQuery Enterprise', content['cards.dataset-02.03.items.02'] ?? 'Vertex AI & GenAI Studio', content['cards.dataset-02.03.items.03'] ?? 'Dataflow Real-Time Streaming', content['cards.dataset-02.03.items.04'] ?? 'Looker Business Intelligence'], accent: "text-pink-400", hover: "hover:border-pink-500/50" },
+              { title: content['cards.dataset-02.04.title'] ?? 'Global Networking', icon: Globe2, items: [content['cards.dataset-02.04.items.01'] ?? 'Enterprise VPC & Cloud NAT', content['cards.dataset-02.04.items.02'] ?? 'Cloud Load Balancing', content['cards.dataset-02.04.items.03'] ?? 'Cloud CDN Global Edge', content['cards.dataset-02.04.items.04'] ?? 'Cloud Armor WAF Protection'], accent: "text-cyan-400", hover: "hover:border-cyan-500/50" },
+              { title: content['cards.dataset-02.05.title'] ?? 'Security & IAM', icon: Lock, items: [content['cards.dataset-02.05.items.01'] ?? 'Context-Aware Access & IAM', content['cards.dataset-02.05.items.02'] ?? 'Key Management (KMS)', content['cards.dataset-02.05.items.03'] ?? 'Security Command Center', content['cards.dataset-02.05.items.04'] ?? 'Chronicle SIEM & SOAR'], accent: "text-purple-400", hover: "hover:border-purple-500/50" },
+              { title: content['cards.dataset-02.06.title'] ?? 'DevOps & SRE', icon: Cpu, items: [content['cards.dataset-02.06.items.01'] ?? 'Cloud Build & Artifact Registry', content['cards.dataset-02.06.items.02'] ?? 'Google Cloud Deploy', content['cards.dataset-02.06.items.03'] ?? 'Cloud Operations Suite', content['cards.dataset-02.06.items.04'] ?? 'Automated SRE Incident'], accent: "text-emerald-400", hover: "hover:border-emerald-500/50" }
+            ].map((service, i) => (
+              <div key={i} className={`bg-slate-950/70 rounded-xl p-3.5 border border-slate-800/80 space-y-2 ${service.hover} hover:bg-slate-900/90 transition-all group`}>
+                <div className="flex items-center gap-2.5">
+                  <div className={`p-2 rounded-lg bg-slate-900 border border-slate-800 ${service.accent} group-hover:scale-110 transition-transform`}>
+                    <service.icon className="w-4 h-4" />
+                  </div>
+                  <h3 className="font-bold text-xs sm:text-sm text-white">{service.title}</h3>
+                </div>
+
+                <ul className="space-y-1 pt-1">
+                  {service.items.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-[11px] text-slate-300">
+                      <ChevronRight className={`w-3 h-3 ${service.accent} shrink-0`} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* DYNAMIC TAB ARCHITECTURE BLUEPRINTS */}
+        <div className="bg-slate-900/40 backdrop-blur-md rounded-2xl border border-slate-800 p-4 sm:p-6 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">{content['architecture.span.text-013'] ?? 'Interactive Blueprints'}</span>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white">{content['architecture.h2.text-002'] ?? 'Ready-to-Use Architecture'}</h2>
             </div>
 
-            <div className="bg-gradient-to-br from-teal-50/70 to-emerald-50/50 p-7 rounded-3xl border border-teal-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-3">
-              <h4 className="font-extrabold text-sm text-teal-900">Data Protection</h4>
-              <p className="text-xs text-slate-600 leading-relaxed">KMS, CMEK, DLP API, object lock, backup & DR.</p>
+            {/* Dynamic Tab Selector */}
+            <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  activeTab === 'analytics'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {content['architecture.button.text-001'] ?? 'Analytics'}
+              </button>
+              <button
+                onClick={() => setActiveTab('microservices')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  activeTab === 'microservices'
+                    ? 'bg-amber-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {content['architecture.button.text-002'] ?? 'Microservices'}
+              </button>
+              <button
+                onClick={() => setActiveTab('genai')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  activeTab === 'genai'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {content['architecture.button.text-003'] ?? 'GenAI Agent'}
+              </button>
+            </div>
+          </div>
+
+          {/* Dynamic Tab Content Display */}
+          <div className="bg-slate-950/90 rounded-xl p-4 border border-slate-800 space-y-3 transition-all">
+            {activeTab === 'analytics' && (
+              <div className="space-y-2 animate-fadeIn">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-bold rounded">
+                  <Database className="w-3 h-3" /> {content['architecture.div.text-003'] ?? 'Modern Analytics Warehouse'}
+                </div>
+                <h3 className="font-bold text-base text-white">{content['architecture.h3.text-001'] ?? 'Real-Time Enterprise Analytics Engine'}</h3>
+                <p className="text-xs text-slate-300">{content['architecture.p.text-005'] ?? 'Sentralisasi & analisis jutaan data real-time dengan BigQuery, Pub/Sub, Dataflow & Looker BI.'}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 text-xs">
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-blue-400 font-bold block">{content['architecture.span.text-014'] ?? '01. Ingestion'}</span>
+                    {content['architecture.div.text-004'] ?? 'Pub/Sub & Dataflow Real-time Stream'}
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-blue-400 font-bold block">{content['architecture.span.text-015'] ?? '02. Storage & SQL'}</span>
+                    {content['architecture.div.text-005'] ?? 'BigQuery Petabyte Analytics'}
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-blue-400 font-bold block">{content['architecture.span.text-016'] ?? '03. BI & Dashboards'}</span>
+                    {content['architecture.div.text-006'] ?? 'Looker Enterprise Business Intelligence'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'microservices' && (
+              <div className="space-y-2 animate-fadeIn">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold rounded">
+                  <Layers className="w-3 h-3" /> {content['architecture.div.text-007'] ?? 'Microservices Mesh'}
+                </div>
+                <h3 className="font-bold text-base text-white">{content['architecture.h3.text-002'] ?? 'GKE Enterprise Container Platform'}</h3>
+                <p className="text-xs text-slate-300">{content['architecture.p.text-006'] ?? 'Arsitektur kontainer berskala tinggi dengan visibilitas Service Mesh & zero-trust network.'}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 text-xs">
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-amber-400 font-bold block">{content['architecture.span.text-017'] ?? '01. CI/CD Pipeline'}</span>
+                    {content['architecture.div.text-008'] ?? 'Cloud Build & GitHub Actions Sync'}
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-amber-400 font-bold block">{content['architecture.span.text-018'] ?? '02. Mesh & Security'}</span>
+                    {content['architecture.div.text-009'] ?? 'Anthos Service Mesh & mTLS Encryption'}
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-amber-400 font-bold block">{content['architecture.span.text-019'] ?? '03. Deployment'}</span>
+                    {content['architecture.div.text-010'] ?? 'Zero-Downtime Canary Rollout'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'genai' && (
+              <div className="space-y-2 animate-fadeIn">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[10px] font-bold rounded">
+                  <Brain className="w-3 h-3" /> {content['architecture.div.text-011'] ?? 'GenAI Solutions'}
+                </div>
+                <h3 className="font-bold text-base text-white">{content['architecture.h3.text-003'] ?? 'Enterprise RAG & AI Agent on Vertex AI'}</h3>
+                <p className="text-xs text-slate-300">{content['architecture.p.text-007'] ?? 'Pengembangan AI Agent & sistem pencarian cerdas berbasis data internal secara privat dan aman.'}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 text-xs">
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-purple-400 font-bold block">{content['architecture.span.text-020'] ?? '01. Vector Database'}</span>
+                    {content['architecture.div.text-012'] ?? 'Vertex Vector Search & Embeddings'}
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-purple-400 font-bold block">{content['architecture.span.text-021'] ?? '02. Guardrails'}</span>
+                    {content['architecture.div.text-013'] ?? 'Custom AI Prompt & Safety Filters'}
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                    <span className="text-purple-400 font-bold block">{content['architecture.span.text-022'] ?? '03. Data Privacy'}</span>
+                    {content['architecture.div.text-014'] ?? 'Enterprise Private Data Shield'}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* MIGRATION & FINOPS */}
+        <div className="bg-slate-900/40 backdrop-blur-md rounded-2xl border border-slate-800 p-4 sm:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+
+            <div className="lg:col-span-7 space-y-3">
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">{content['architecture.span.text-023'] ?? 'Seamless Transition'}</span>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white">{content['architecture.h2.text-003'] ?? 'Migrasi Tanpa Downtime & Risk'}</h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                {[
+                  { step: "01", title: content['cards.dataset-03.01.title'] ?? 'Discovery & TCO', desc: content['cards.dataset-03.01.desc'] ?? 'Pemetaan legacy & estimasi hemat.' },
+                  { step: "02", title: content['cards.dataset-03.02.title'] ?? 'Landing Zone', desc: content['cards.dataset-03.02.desc'] ?? 'Setup IAM & struktur VPC awal.' },
+                  { step: "03", title: content['cards.dataset-03.03.title'] ?? 'Pilot Workload', desc: content['cards.dataset-03.03.desc'] ?? 'Pengujian migrasi tanpa mengganggu.' },
+                  { step: "04", title: content['cards.dataset-03.04.title'] ?? 'FinOps Optimization', desc: content['cards.dataset-03.04.desc'] ?? 'Monitoring & efisiensi berkala.' }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-emerald-500/40 transition-colors">
+                    <span className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0">
+                      {item.step}
+                    </span>
+                    <div>
+                      <h4 className="text-xs font-bold text-white">{item.title}</h4>
+                      <p className="text-[10px] text-slate-400">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50/70 to-pink-50/50 p-7 rounded-3xl border border-purple-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 space-y-3">
-              <h4 className="font-extrabold text-sm text-purple-900">Observability & Threat</h4>
-              <p className="text-xs text-slate-600 leading-relaxed">Cloud Logging/Monitoring, Cloud IDS, SCC, Chronicle.</p>
+            <div className="lg:col-span-5">
+              <div className="bg-slate-950 rounded-xl p-3.5 border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="text-[10px] font-mono text-slate-400">{content['architecture.span.text-024'] ?? 'Migration Pipeline'}</span>
+                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">{content['architecture.span.text-025'] ?? 'Active Sync'}</span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[10px] text-slate-300 font-medium">
+                      <span>{content['architecture.span.text-026'] ?? 'Source Workload Mapped'}</span>
+                      <span className="text-emerald-400 font-mono">{content['architecture.span.text-027'] ?? '100%'}</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-slate-900 overflow-hidden border border-slate-800">
+                      <div className="h-full bg-blue-500 rounded-full w-full" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[10px] text-slate-300 font-medium">
+                      <span>{content['architecture.span.text-028'] ?? 'Data Syncing'}</span>
+                      <span className="text-amber-400 font-mono">{content['architecture.span.text-029'] ?? '88%'}</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-slate-900 overflow-hidden border border-slate-800">
+                      <div className="h-full bg-amber-500 rounded-full w-[88%] animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-300 flex items-center gap-2">
+                  <Cloud className="w-4 h-4 shrink-0 text-blue-400" />
+                  <span>{content['architecture.span.text-030'] ?? 'Didukung Google Cloud Certified Architect profesional.'}</span>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
 
-        {/* 7. READY TO START OR OPTIMIZE YOUR GOOGLE CLOUD? (CTA BANNER) */}
-        <div className="relative w-full rounded-[36px] overflow-hidden bg-gradient-to-r from-[#0d2244] via-[#102750] to-[#12233f] shadow-2xl p-8 sm:p-12 lg:p-16 flex flex-col lg:flex-row items-center justify-between text-white border border-slate-800">
-          <div className="space-y-4 max-w-lg z-10 mb-8 lg:mb-0">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-amber-400 tracking-tight">
-              Ready to start or optimize your Google Cloud?
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-              We help with everything from architecture and implementation to managed services and FinOps.
-            </p>
+        {/* CALL TO ACTION */}
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 border border-blue-500/30 p-4 sm:p-6 shadow-md">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div>
+              <h2 className="text-lg sm:text-xl font-extrabold text-white">{content['cta.h2.text-004'] ?? 'Siap Mentransformasi Cloud Anda?'}</h2>
+              <p className="text-xs text-slate-300 mt-0.5">{content['cta.p.text-008'] ?? 'Konsultasikan arsitektur, migrasi, atau optimasi biaya Google Cloud hari ini.'}</p>
+            </div>
+
             <Link
-              href="/contact"
-              className="inline-flex items-center justify-center bg-amber-500 hover:bg-amber-400 text-[#0c1f3d] font-bold text-xs sm:text-sm px-7 py-3.5 rounded-xl shadow-md transition hover:scale-105 active:scale-95 cursor-pointer"
+              href={content['cta.link.href-003'] ?? '/contact'}
+              className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-6 py-3 rounded-xl shadow-md transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
             >
-              Discuss Solutions with Us
+              {content['cta.link.text-002'] ?? 'Konsultasi Gratis'}
             </Link>
-          </div>
-
-          <div className="relative z-10 flex items-center justify-center">
-            <div className="relative w-[320px] sm:w-[380px] h-[220px] sm:h-[250px] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-900">
-              <img
-                src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop"
-                alt="Cloud Optimization Team"
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
           </div>
         </div>
 

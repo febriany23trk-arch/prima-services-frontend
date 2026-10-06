@@ -1,0 +1,50 @@
+import type { PageContentMap } from "@/lib/page-content-types";
+
+export const MEDIA_CONTENT_DEFAULTS: PageContentMap = {
+  home: {
+    "hero-slides.0.src": "/images/dashboard1.jpg",
+    "hero-slides.1.src": "/images/dashboard2.jpg",
+    "hero-slides.2.src": "/images/dashboard3.jpg",
+    "hero-slides.3.src": "/images/dashboard4.jpg",
+    "bpo-sub-services.0.imageSrc": "/images/talent-mapping.png",
+    "bpo-sub-services.1.imageSrc": "/images/contract-payroll.png",
+    "bpo-sub-services.2.imageSrc": "/images/technical-talent.png",
+    "bpo-cards.0.imageSrc": "/images/icon1.png",
+    "bpo-cards.1.imageSrc": "/images/icon2.png",
+    "bpo-cards.2.imageSrc": "/images/icon3.png",
+    "bpo-cards.3.imageSrc": "/images/icon4.png",
+    "integrations.0.logoSrc": "/images/enable1.png",
+    "integrations.1.logoSrc": "/images/enable2.png",
+    "integrations.2.logoSrc": "/images/enable3.png",
+    "scale-cards.0.imageSrc": "/images/scale-employee.png",
+    "scale-cards.1.imageSrc": "/images/scale-remote.png",
+    "scale-cards.2.imageSrc": "/images/scale-virtual.png",
+    "scale-cards.3.imageSrc": "/images/scale-compliance.png",
+    "deliver-steps.0.imageSrc": "/images/icon1.png",
+    "deliver-steps.1.imageSrc": "/images/icon2.png",
+    "deliver-steps.2.imageSrc": "/images/icon3.png",
+    "deliver-steps.3.imageSrc": "/images/icon4.png",
+    "recruitment-rpo-section.logo.src": "/images/logo.png",
+    "how-we-scale-section.logo.src": "/images/logo.png",
+    "global-relations-section.image.src": "/images/global-map.png",
+    "cta-section.image.src": "/images/bitmap2.png",
+  },
+  about: {
+    "hero-about-us.image.src": "/images/about-team.png",
+    "our-executive-team.image.src": "/images/mita.jpeg",
+  },
+  services: {
+    "bpo-cards.0.imageSrc": "/images/Model.png",
+    "bpo-cards.1.imageSrc": "/images/Man.png",
+    "bpo-cards.2.imageSrc": "/images/Collection.png",
+    "bpo-cards.3.imageSrc": "/images/Kyc.png",
+    "hero-section.image.src": "/images/Bitmap.png",
+  },
+  contact: {
+    "features.image.src": "/images/contact.png",
+    "cta.image.src": "/images/Bitmap1.png",
+  },
+  shared: {
+    "navigation.logo.src": "/images/logo.png",
+  },
+};
