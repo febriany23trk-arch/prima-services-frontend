@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
   try {
     await queryDatabase(
-      "DELETE FROM visitor_analytics WHERE visited_at < now() - interval '30 days'",
+      "DELETE FROM visitor_analytics WHERE visited_at < now() - interval '365 days'",
     );
     await queryDatabase(
       "INSERT INTO visitor_analytics (ip_address, path) VALUES ($1, $2)",

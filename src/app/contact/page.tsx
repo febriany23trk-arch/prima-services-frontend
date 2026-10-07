@@ -256,11 +256,11 @@ export default function ContactPage() {
 
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white border border-slate-200 text-indigo-600 text-xs font-black mb-8 shadow-xs">
               <Sparkles className="w-4 h-4 text-indigo-600" />
-              <span className="tracking-widest uppercase">{content['hero.span.text-001'] ?? 'Let\'s Build Together'}</span>
+              <span className="tracking-widest uppercase">{content['hero.span.text-001'] ?? "Let's Build Together"}</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6">
-              <span className="text-slate-900">{content['hero.span.text-002'] ?? 'Let\'s discuss'}</span> <br />
+              <span className="text-slate-900">{content['hero.span.text-002'] ?? "Let's discuss"}</span> <br />
               <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 {content['hero.span.text-003'] ?? 'your vision.'}
               </span>
@@ -355,7 +355,7 @@ export default function ContactPage() {
                 <h3 className="text-2xl sm:text-4xl font-black text-slate-900 mt-3 mb-2 tracking-tight">
                   {content['contact.h3.text-001'] ?? 'Send Us a Message'}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium">{content['contact.p.text-005'] ?? 'Tell us about your project or inquiry and we\'ll prepare a customized proposal.'}</p>
+                <p className="text-xs sm:text-sm text-slate-500 font-medium">{content['contact.p.text-005'] ?? "Tell us about your project or inquiry and we'll prepare a customized proposal."}</p>
               </div>
 
               {isSuccess && (
@@ -587,9 +587,9 @@ export default function ContactPage() {
           </div>
 
           {/* CONTACT INFO SIDEBAR */}
-          <div className="lg:col-span-4 space-y-6 flex flex-col justify-between">
+          <div className="lg:col-span-4 space-y-6 flex flex-col">
 
-            <div className="bg-white rounded-[2.5rem] p-8 border border-slate-200/80 shadow-sm relative overflow-hidden">
+            <div className="shrink-0 bg-white rounded-[2.5rem] p-8 border border-slate-200/80 shadow-sm relative overflow-hidden">
 
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-sky-400" />
 
@@ -634,9 +634,11 @@ export default function ContactPage() {
                   <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-100 text-sky-600 shrink-0">
                     <MapPin className="w-4 h-4" />
                   </div>
-                  <div className="pt-0.5">
+                  <div className="w-full min-w-0 pt-0.5">
                     <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider mb-1">{content['contact.p.text-011'] ?? 'Head Office'}</p>
-                    <p className="leading-relaxed font-semibold text-slate-700">{displayContactInfo.address_jakarta}</p>
+                    <p className="font-semibold text-slate-700 text-xs leading-relaxed break-words [overflow-wrap:anywhere]">
+                      {displayContactInfo.address_jakarta}
+                    </p>
                   </div>
                 </div>
 
@@ -655,7 +657,7 @@ export default function ContactPage() {
             </div>
 
             {/* MAP EMBED */}
-            <div className="bg-white border border-slate-200/80 rounded-[2.5rem] overflow-hidden shadow-sm h-full min-h-[260px] relative">
+            <div className="bg-white border border-slate-200/80 rounded-[2.5rem] overflow-hidden shadow-sm h-[320px] min-h-[260px] relative">
               <iframe
                 title={content['contact.iframe.title-001'] ?? 'Jakarta Location'}
                 src="https://maps.google.com/maps?q=Jakarta,%20Indonesia&t=&z=13&ie=UTF8&iwloc=&output=embed"

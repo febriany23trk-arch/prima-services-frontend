@@ -259,7 +259,7 @@ export default function Footer() {
               {content["footer.terms.label"] ?? "Terms & Conditions"}
             </Link>
             <span className="max-w-md text-center text-[10px] leading-relaxed text-slate-400">
-              Statistik kunjungan mencatat IP, halaman, dan waktu; disimpan maksimal 30 hari.
+              Statistik kunjungan mencatat IP, halaman, dan waktu; disimpan maksimal 1 tahun.
             </span>
 
             <button

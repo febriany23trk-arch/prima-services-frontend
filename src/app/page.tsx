@@ -27,7 +27,8 @@ import {
   Globe2,
   ArrowUpRight,
   Activity,
-  TrendingUp
+  TrendingUp,
+  Workflow
 } from "lucide-react";
 
 // --- DATA CONSTANTS ---
@@ -74,12 +75,13 @@ export default function Page() {
 
   const BPO_MAIN_SERVICE = {
   title: content['bpo-main-service.title'] ?? 'Business Process Outsourcing',
-  icon: Headphones,
+  icon: Workflow,
   description: content['bpo-main-service.description'] ?? 'Layanan Business Process Outsourcing (BPO) kami menyediakan solusi operasional bisnis yang komprehensif, mencakup layanan dukungan pelanggan nonstop melalui 24/7 Contact Center & Customer Service serta pendorong pertumbuhan bisnis lewat Telemarketing & Sales Support. Untuk pengelolaan keuangan dan validasi, kami menangani penagihan secara profesional melalui Collections & Payment Follow-up dan menjamin keamanan data pengguna melalui KYC & Data Verification.',
 };
 
   const BPO_SUB_SERVICES = [
   {
+    slug: "recruitment-headhunter",
     title: content['bpo-sub-services.0.title'] ?? 'Recruitment & Headhunter',
     description: content['bpo-sub-services.0.description'] ?? 'Layanan pencarian dan penyediaan tenaga kerja profesional serta eksekutif yang disesuaikan dengan kebutuhan bisnis Anda.',
     imageSrc: content['bpo-sub-services.0.imageSrc'] ?? "/images/talent-mapping.png",
@@ -92,6 +94,7 @@ export default function Page() {
     ],
   },
   {
+    slug: "outsourcing-solution",
     title: content['bpo-sub-services.1.title'] ?? 'Outsourcing Solution',
     description: content['bpo-sub-services.1.description'] ?? 'Solusi alih daya operasional untuk meningkatkan efisiensi dan pengelolaan tim kerja secara fleksibel.',
     imageSrc: content['bpo-sub-services.1.imageSrc'] ?? "/images/contract-payroll.png",
@@ -103,6 +106,7 @@ export default function Page() {
     ],
   },
   {
+    slug: "global-relations-business-support",
     title: content['bpo-sub-services.2.title'] ?? 'Global Relations & Business Support',
     description: content['bpo-sub-services.2.description'] ?? 'Dukungan ekspansi bisnis internasional dan konsultasi strategis lintas negara di Asia Tenggara hingga Eropa.',
     imageSrc: content['bpo-sub-services.2.imageSrc'] ?? "/images/technical-talent.png",
@@ -118,24 +122,28 @@ export default function Page() {
 
   const BPO_CARDS = [
   {
+    slug: "cx-contact-center",
     title: content['bpo-cards.0.title'] ?? 'CX | Contact Center\n(Customer Service)',
     desc: content['bpo-cards.0.desc'] ?? 'Diagnosa, Map Journeys & Scripts, Operate with QC, Weekly Reporting & Improvements',
     imageSrc: content['bpo-cards.0.imageSrc'] ?? "/images/icon1.png",
     alt: content['bpo-cards.0.alt'] ?? 'CX Contact Center Avatar',
   },
   {
+    slug: "sales-telesales",
     title: content['bpo-cards.1.title'] ?? 'Sales Telesales',
     desc: content['bpo-cards.1.desc'] ?? 'Segment & Script, Outreach & Logging, Weekly Coaching, Optimize Message & Target',
     imageSrc: content['bpo-cards.1.imageSrc'] ?? "/images/icon2.png",
     alt: content['bpo-cards.1.alt'] ?? 'Sales Telesales Avatar',
   },
   {
+    slug: "collection",
     title: content['bpo-cards.2.title'] ?? 'Collection',
     desc: content['bpo-cards.2.desc'] ?? 'Bucket Mapping, Communication Strategy, Execution & Negotiation, Results Review',
     imageSrc: content['bpo-cards.2.imageSrc'] ?? "/images/icon3.png",
     alt: content['bpo-cards.2.alt'] ?? 'Collection Icon',
   },
   {
+    slug: "kyc-verification",
     title: content['bpo-cards.3.title'] ?? 'KYC Verification',
     desc: content['bpo-cards.3.desc'] ?? 'Data Intake, Stepwise Verification, Clarification, Archiving & Reporting',
     imageSrc: content['bpo-cards.3.imageSrc'] ?? "/images/icon4.png",
@@ -145,6 +153,7 @@ export default function Page() {
 
   const CONTROL_ITEMS = [
   {
+    slug: "sop-operasional",
     icon: Puzzle,
     title: content['control-items.0.title'] ?? 'Short SOPs per Function',
     description: content['control-items.0.description'] ?? 'Easy to understand and repeat across teams with clear, standardized operational guidelines.',
@@ -152,6 +161,7 @@ export default function Page() {
     badgeBg: "bg-blue-50/80 text-blue-600 border-blue-200/80",
   },
   {
+    slug: "quality-assurance-coaching",
     icon: Handshake,
     title: content['control-items.1.title'] ?? 'QA Scorecards & Coaching',
     description: content['control-items.1.description'] ?? 'Steady quality and performance consistency through regular feedback loops and evaluation.',
@@ -159,6 +169,7 @@ export default function Page() {
     badgeBg: "bg-amber-50/80 text-amber-600 border-amber-200/80",
   },
   {
+    slug: "dashboard-real-time",
     icon: LineChart,
     title: content['control-items.2.title'] ?? 'Real-time Dashboards',
     description: content['control-items.2.description'] ?? 'Faster, evidence-based decisions with live data analytics and a clean audit trail.',
@@ -304,24 +315,28 @@ export default function Page() {
 
   const FEATURE_HIGHLIGHTS = [
   {
+    slug: "layanan-ujung-ke-ujung",
     title: content['feature-highlights.0.title'] ?? 'Layanan Ujung-ke-Ujung',
     description: content['feature-highlights.0.description'] ?? 'Layanan menyeluruh dari analisis, perancangan, pengembangan, hingga pemeliharaan oleh tim profesional.',
     icon: Puzzle,
     bgColor: "bg-blue-50 text-blue-600 border-blue-200/80",
   },
   {
+    slug: "mitra-resmi-terpercaya",
     title: content['feature-highlights.1.title'] ?? 'Mitra Resmi & Tepercaya',
     description: content['feature-highlights.1.description'] ?? 'Mitra resmi Google dan Sobot.io, bukti pengakuan standar global atas solusi andal kami.',
     icon: Handshake,
     bgColor: "bg-sky-50 text-sky-600 border-sky-200/80",
   },
   {
+    slug: "roi-terukur",
     title: content['feature-highlights.2.title'] ?? 'ROI yang Terukur',
     description: content['feature-highlights.2.description'] ?? 'Berfokus pada efisiensi biaya, akselerasi proses, serta kepuasan pelanggan secara konkrit.',
     icon: LineChart,
     bgColor: "bg-indigo-50 text-indigo-600 border-indigo-200/80",
   },
   {
+    slug: "keamanan-kepatuhan",
     title: content['feature-highlights.3.title'] ?? 'Keamanan & Kepatuhan',
     description: content['feature-highlights.3.description'] ?? 'Prioritas tertinggi pada kepatuhan regulasi dan standar keamanan data global.',
     icon: Shield,
@@ -569,8 +584,10 @@ export default function Page() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       {BPO_SUB_SERVICES.map((sub, sIdx) => (
-                        <div
+                        <Link
                           key={sIdx}
+                          href={`/services/details/${sub.slug}`}
+                          aria-label={`Pelajari lebih lanjut: ${sub.title}`}
                           className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-xs hover:shadow-2xl hover:border-blue-300 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group/card"
                         >
                           <div>
@@ -606,7 +623,7 @@ export default function Page() {
                               </ul>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -644,8 +661,10 @@ export default function Page() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {BPO_CARDS.map((card, idx) => (
-              <div
+              <Link
                 key={idx}
+                href={`/services/details/${card.slug}`}
+                aria-label={`Pelajari lebih lanjut: ${card.title.replace(/\n/g, " ")}`}
                 className="bg-white rounded-3xl p-6 text-center border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-blue-400 hover:-translate-y-2 transition-all duration-500 group flex flex-col items-center relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-500" />
@@ -668,7 +687,7 @@ export default function Page() {
                 <p className="text-xs text-slate-500 leading-relaxed font-normal">
                   {card.desc}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -697,8 +716,10 @@ export default function Page() {
               {CONTROL_ITEMS.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
-                  <div
+                  <Link
                     key={index}
+                    href={`/services/details/${item.slug}`}
+                    aria-label={`Pelajari lebih lanjut: ${item.title}`}
                     className="group relative bg-slate-50/70 border border-slate-200/90 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white hover:shadow-2xl hover:border-blue-300 flex flex-col justify-between overflow-hidden shadow-xs"
                   >
                     <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${item.accentColor} opacity-90 group-hover:opacity-100 transition-opacity`} />
@@ -726,7 +747,7 @@ export default function Page() {
                       <span>{content['home.how-we-control-enable-section.text.standards-verified'] ?? 'Standards Verified'}</span>
                       <ChevronRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
@@ -818,8 +839,10 @@ export default function Page() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {BPO_SUB_SERVICES.map((card, idx) => (
-              <div
+              <Link
                 key={idx}
+                href={`/services/details/${card.slug}`}
+                aria-label={`Pelajari lebih lanjut: ${card.title}`}
                 className="group relative bg-white text-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200/90 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-300 flex flex-col justify-between overflow-hidden"
               >
                 <div>
@@ -863,7 +886,7 @@ export default function Page() {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -1235,8 +1258,10 @@ export default function Page() {
             {FEATURE_HIGHLIGHTS.map((feature, idx) => {
               const IconComponent = feature.icon;
               return (
-                <div
+                <Link
                   key={idx}
+                  href={`/advantages/${feature.slug}`}
+                  aria-label={`Pelajari lebih lanjut: ${feature.title}`}
                   className="bg-slate-50/70 rounded-3xl p-6 text-center border border-slate-200/80 hover:bg-white hover:shadow-xl hover:border-blue-300 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center group"
                 >
                   <div className={`w-12 h-12 ${feature.bgColor} border rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-xs`}>
@@ -1248,7 +1273,7 @@ export default function Page() {
                   <p className="text-slate-500 text-xs leading-relaxed font-normal">
                     {feature.description}
                   </p>
-                </div>
+                </Link>
               );
             })}
           </div>

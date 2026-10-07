@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
           pencatatan statistik ini.
         </p>
         <p className="leading-7">
-          Data kunjungan disimpan paling lama 30 hari, lalu dihapus saat sistem melakukan
+          Data kunjungan disimpan paling lama 1 tahun, lalu dihapus saat sistem melakukan
           pembersihan berkala. Catatan hanya dapat dilihat oleh admin yang telah masuk ke
           dashboard dan tidak digunakan untuk mengidentifikasi pengunjung melalui layanan
           pihak ketiga.

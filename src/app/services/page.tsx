@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { usePageContent } from "@/lib/use-page-content";
 import Image from "next/image";
+import Link from "next/link";
 import { apiUrl } from "@/lib/api";
 
 interface PublicService {
@@ -119,6 +120,7 @@ export default function ServicesPage() {
 
   const TALENT_MAPPING_CARDS = [
   {
+    slug: "salary-benchmark-data",
     title: content['talent-mapping-cards.0.title'] ?? 'Benchmark & Salary Data',
     desc: content['talent-mapping-cards.0.desc'] ?? 'Akurasi data gaji dan kompensasi pasar terkini untuk efisiensi budget SDM.',
     cardBg: "bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40",
@@ -135,6 +137,7 @@ export default function ServicesPage() {
     ),
   },
   {
+    slug: "regional-talent-insights",
     title: content['talent-mapping-cards.1.title'] ?? 'Insights Across Regions',
     desc: content['talent-mapping-cards.1.desc'] ?? 'Analisis mendalam ketersediaan talenta berbasis wilayah dan geografis.',
     cardBg: "bg-gradient-to-br from-white via-sky-50/30 to-cyan-50/40",
@@ -151,6 +154,7 @@ export default function ServicesPage() {
     ),
   },
   {
+    slug: "passive-talent-mapping",
     title: content['talent-mapping-cards.2.title'] ?? 'Passive Talent Mapping',
     desc: content['talent-mapping-cards.2.desc'] ?? 'Pemetaan kandidat potensial pasif terbaik yang siap direkrut sesuai kebutuhan.',
     cardBg: "bg-gradient-to-br from-white via-indigo-50/40 to-blue-50/50",
@@ -167,6 +171,7 @@ export default function ServicesPage() {
     ),
   },
   {
+    slug: "talent-reports-dashboards",
     title: content['talent-mapping-cards.3.title'] ?? 'Reports & Dashboards',
     desc: content['talent-mapping-cards.3.desc'] ?? 'Visualisasi laporan dan dashboard intuitif untuk pengambilan keputusan strategis.',
     cardBg: "bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/40",
@@ -365,9 +370,11 @@ export default function ServicesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {services.map((service) => (
-                <article
+                <Link
                   key={service.id}
-                  className="rounded-2xl border border-slate-200 bg-slate-50/70 p-5"
+                  href={`/services/catalog/${encodeURIComponent(service.id)}`}
+                  aria-label={`Pelajari lebih lanjut tentang ${service.name}`}
+                  className="group rounded-2xl border border-slate-200 bg-slate-50/70 p-5 transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
                 >
                   <p className="text-[10px] font-bold uppercase tracking-wider text-blue-700" >
                     {service.category}
@@ -380,7 +387,11 @@ export default function ServicesPage() {
                       {service.description}
                     </p>
                   )}
-                </article>
+                  <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-blue-700">
+                    Pelajari layanan
+                    <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
@@ -589,8 +600,10 @@ export default function ServicesPage() {
             {/* Feature Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {TALENT_MAPPING_CARDS.map((card, idx) => (
-                <div
-                  key={idx}
+                <Link
+                  key={card.slug}
+                  href={`/services/details/${card.slug}`}
+                  aria-label={`Pelajari lebih lanjut: ${card.title}`}
                   className={`group relative p-5 rounded-2xl ${card.cardBg} border border-slate-200/90 shadow-xs hover:shadow-xl ${card.hoverGlow} ${card.hoverBorder} transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden`}
                 >
                   {/* Top Accent Gradient Bar */}
@@ -618,20 +631,17 @@ export default function ServicesPage() {
 
                   {/* Explore Details Link */}
                   <div className="mt-5 pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                    <a
-                      href={content['services.talent-mapping-market-intelligence-section.href.copy'] ?? '#'}
-                      className={`inline-flex items-center gap-1 text-[10px] font-bold ${card.linkColor} transition-all duration-200 group/link`}
-                    >
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-bold ${card.linkColor} transition-all duration-200`}>
                       <span>{content['services.talent-mapping-market-intelligence-section.text.explore-details'] ?? 'Explore Details'}</span>
-                      <svg className="w-3 h-3 transition-transform duration-200 group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                       </svg>
-                    </a>
+                    </span>
                     <svg className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" />
                     </svg>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

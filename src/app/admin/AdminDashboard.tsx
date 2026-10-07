@@ -100,6 +100,8 @@ interface VisitorEvent {
 }
 
 type InquiryFilter = "all" | "new-pending" | "replied" | "overdue";
+type RecentInquiryStatusFilter = "all" | "new" | "pending" | "replied";
+type VisitorRange = "7d" | "30d" | "1y";
 
 const API_BASE_URL = "/api/v1/admin";
 
@@ -129,6 +131,9 @@ export default function AdminDashboard() {
   
   const [searchQuery, setSearchQuery] = useState("");
   const [inquiryFilter, setInquiryFilter] = useState<InquiryFilter>("all");
+  const [recentStatusFilter, setRecentStatusFilter] =
+    useState<RecentInquiryStatusFilter>("all");
+  const [recentServiceFilter, setRecentServiceFilter] = useState("all");
   const [serviceFilter, setServiceFilter] = useState<"all" | "active">("all");
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [visitorEvents, setVisitorEvents] = useState<VisitorEvent[]>([]);
@@ -136,6 +141,12 @@ export default function AdminDashboard() {
   const [visitorAnalyticsError, setVisitorAnalyticsError] = useState("");
   const [isLoadingVisitorAnalytics, setIsLoadingVisitorAnalytics] = useState(true);
   const [visitorAnalyticsReload, setVisitorAnalyticsReload] = useState(0);
+  const [visitorRange, setVisitorRange] = useState<VisitorRange>("30d");
+  const visitorRangeLabels: Record<VisitorRange, string> = {
+    "7d": "7 hari terakhir",
+    "30d": "1 bulan terakhir",
+    "1y": "1 tahun terakhir",
+  };
 
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -160,6 +171,29 @@ export default function AdminDashboard() {
   const repliedInquiriesCount = inquiries.filter((i) => i.status === "Replied").length;
   const overdueInquiriesCount = inquiries.filter((i) => i.isOverdue).length;
   const newInquiries = inquiries.filter((i) => i.status === "New");
+  const inquiryServices = [...new Set(inquiries.map((inquiry) => inquiry.service).filter(Boolean))];
+  const recentInquiries = inquiries
+    .filter((item) => {
+      const query = searchQuery.toLowerCase();
+      const matchesStatus =
+        recentStatusFilter === "all" ||
+        (recentStatusFilter === "new" && item.status === "New") ||
+        (recentStatusFilter === "pending" && item.status === "Pending") ||
+        (recentStatusFilter === "replied" && item.status === "Replied");
+      const matchesSearch =
+        !query ||
+        item.name.toLowerCase().includes(query) ||
+        item.email.toLowerCase().includes(query) ||
+        item.service.toLowerCase().includes(query) ||
+        item.message.toLowerCase().includes(query) ||
+        Boolean(item.company?.toLowerCase().includes(query));
+      return (
+        matchesStatus &&
+        matchesSearch &&
+        (recentServiceFilter === "all" || item.service === recentServiceFilter)
+      );
+    })
+    .slice(0, 5);
 
   const filteredInquiries = inquiries.filter((item) => {
     const q = searchQuery.toLowerCase();
@@ -214,7 +248,9 @@ export default function AdminDashboard() {
     if (activeTab !== "analytics") return;
     let cancelled = false;
 
-    void fetch(`${API_BASE_URL}/analytics/visitors`, { cache: "no-store" })
+    void fetch(`${API_BASE_URL}/analytics/visitors?range=${visitorRange}`, {
+      cache: "no-store",
+    })
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) {
@@ -246,7 +282,7 @@ export default function AdminDashboard() {
     return () => {
       cancelled = true;
     };
-  }, [activeTab, visitorAnalyticsReload]);
+  }, [activeTab, visitorAnalyticsReload, visitorRange]);
   const fetchBackendData = async () => {
     try {
       const [resServices, resInquiries, resCompany] = await Promise.all([
@@ -1036,20 +1072,63 @@ export default function AdminDashboard() {
               </div>
 
               <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
+                <div className="mb-5 flex flex-col gap-4 border-b border-slate-100 pb-4 lg:flex-row lg:items-center lg:justify-between">
                   <div>
                     <h3 className="text-base font-bold text-slate-900">Recent Inquiries</h3>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      {searchQuery ? `Search results: "${searchQuery}"` : "Direct messages from the website contact form"}
+                      {searchQuery
+                        ? `Search results: "${searchQuery}"`
+                        : `Menampilkan hingga 5 pesan terbaru${recentServiceFilter !== "all" ? ` untuk ${recentServiceFilter}` : ""}`}
                     </p>
                   </div>
-                  <button 
-                    onClick={() => setActiveTab("inquiries")}
-                    className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors inline-flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>View All</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label className="sr-only" htmlFor="recent-inquiry-service">
+                      Filter berdasarkan layanan
+                    </label>
+                    <select
+                      id="recent-inquiry-service"
+                      value={recentServiceFilter}
+                      onChange={(event) => setRecentServiceFilter(event.target.value)}
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    >
+                      <option value="all">Semua Layanan</option>
+                      {inquiryServices.map((service) => (
+                        <option key={service} value={service}>{service}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => openInquiries("all")}
+                      className="inline-flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-bold text-indigo-600 transition-colors hover:bg-indigo-50 hover:text-indigo-700"
+                    >
+                      <span>View All</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mb-4 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Kelompok pesan terbaru">
+                  {([
+                    ["all", "Semua", totalInquiries],
+                    ["new", "Baru", inquiries.filter((item) => item.status === "New").length],
+                    ["pending", "Pending", inquiries.filter((item) => item.status === "Pending").length],
+                    ["replied", "Done Respond", repliedInquiriesCount],
+                  ] as const).map(([filter, label, count]) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      role="tab"
+                      aria-selected={recentStatusFilter === filter}
+                      onClick={() => setRecentStatusFilter(filter)}
+                      className={`shrink-0 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-colors ${
+                        recentStatusFilter === filter
+                          ? "border-indigo-600 bg-indigo-600 text-white"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-700"
+                      }`}
+                    >
+                      {label}<span className="ml-1.5 opacity-75">{count}</span>
+                    </button>
+                  ))}
                 </div>
 
                 <div className="overflow-x-auto">
@@ -1064,8 +1143,8 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {filteredInquiries.length > 0 ? (
-                        filteredInquiries.map((item) => (
+                      {recentInquiries.length > 0 ? (
+                        recentInquiries.map((item) => (
                           <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
                             <td className="py-4">
                               <p className="font-semibold text-slate-800">{item.name}</p>
@@ -1093,7 +1172,7 @@ export default function AdminDashboard() {
                       ) : (
                         <tr>
                           <td colSpan={5} className="py-10 text-center text-slate-400">
-                            No inquiry data found.
+                            Tidak ada pesan untuk filter ini.
                           </td>
                         </tr>
                       )}
@@ -1700,26 +1779,60 @@ export default function AdminDashboard() {
 
           {activeTab === "analytics" && (
             <section className="mx-auto max-w-7xl space-y-6">
-              <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h2 className="text-base font-bold text-slate-900">Visitor Analytics</h2>
-                  <p className="mt-1 text-xs text-slate-500">
-                    {visitorCount} kunjungan dalam 30 hari terakhir. Data IP dihapus setelah masa retensi.
+              <div className="space-y-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <h2 className="text-base font-bold text-slate-900">Visitor Analytics</h2>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {visitorCount} kunjungan dalam {visitorRangeLabels[visitorRange]}. Data disimpan maksimal 1 tahun.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsLoadingVisitorAnalytics(true);
+                      setVisitorAnalyticsError("");
+                      setVisitorAnalyticsReload((reload) => reload + 1);
+                    }}
+                    disabled={isLoadingVisitorAnalytics}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-60"
+                  >
+                    {isLoadingVisitorAnalytics && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                    Muat Ulang Data
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-wrap gap-2" role="group" aria-label="Filter rentang waktu Visitor Analytics">
+                    {([
+                      ["7d", "7 Hari Terakhir"],
+                      ["30d", "1 Bulan Terakhir"],
+                      ["1y", "1 Tahun Terakhir"],
+                    ] as const).map(([range, label]) => (
+                      <button
+                        key={range}
+                        type="button"
+                        onClick={() => {
+                          if (visitorRange === range) return;
+                          setIsLoadingVisitorAnalytics(true);
+                          setVisitorAnalyticsError("");
+                          setVisitorRange(range);
+                        }}
+                        aria-pressed={visitorRange === range}
+                        className={`rounded-xl border px-4 py-2.5 text-xs font-semibold transition-colors ${
+                          visitorRange === range
+                            ? "border-indigo-600 bg-indigo-600 text-white shadow-sm"
+                            : "border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-700"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-slate-500">
+                    Menampilkan maksimal 500 kunjungan terbaru per rentang.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsLoadingVisitorAnalytics(true);
-                    setVisitorAnalyticsError("");
-                    setVisitorAnalyticsReload((reload) => reload + 1);
-                  }}
-                  disabled={isLoadingVisitorAnalytics}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-60"
-                >
-                  {isLoadingVisitorAnalytics && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                  Muat Ulang Data
-                </button>
               </div>
 
               {visitorAnalyticsError && (
@@ -1749,7 +1862,7 @@ export default function AdminDashboard() {
                     ) : visitorEvents.length === 0 ? (
                       <tr>
                         <td colSpan={5} className="py-12 text-center text-slate-500">
-                          Belum ada data kunjungan dalam 30 hari terakhir.
+                          Belum ada data kunjungan dalam {visitorRangeLabels[visitorRange]}.
                         </td>
                       </tr>
                     ) : (
