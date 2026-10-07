@@ -37,11 +37,13 @@ export function verifyAdminSession(token: string | undefined): boolean {
   }
 
   try {
-    const session: { email: string; expiresAt: number } = JSON.parse(
+    const session: { email?: unknown; expiresAt?: unknown } = JSON.parse(
       Buffer.from(payload, "base64url").toString("utf8"),
     );
     return (
-      session.email.toLowerCase() === process.env.ADMIN_EMAIL?.trim().toLowerCase() &&
+      typeof session.email === "string" &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(session.email) &&
+      typeof session.expiresAt === "number" &&
       Number.isFinite(session.expiresAt) &&
       session.expiresAt > Date.now()
     );

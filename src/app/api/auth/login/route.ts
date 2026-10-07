@@ -1,20 +1,13 @@
-import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { ADMIN_SESSION_COOKIE, createAdminSession } from "@/lib/admin-auth";
-
-function secureEqual(left: string, right: string): boolean {
-  const leftHash = createHash("sha256").update(left).digest();
-  const rightHash = createHash("sha256").update(right).digest();
-  return timingSafeEqual(leftHash, rightHash);
-}
+import { queryDatabase } from "@/lib/db";
+import { verifyPassword } from "@/lib/password-hash";
 
 export async function POST(request: Request) {
-  const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-  const password = process.env.ADMIN_PASSWORD;
   const secret = process.env.AUTH_SECRET;
-  if (!email || !password || !secret || secret.length < 32) {
+  if (!secret || secret.length < 32) {
     return Response.json(
-      { detail: "Konfigurasi login admin di server belum lengkap." },
+      { detail: "AUTH_SECRET belum dikonfigurasi dengan benar di environment Vercel." },
       { status: 503 },
     );
   }
@@ -29,14 +22,46 @@ export async function POST(request: Request) {
   if (
     typeof credentials.email !== "string" ||
     typeof credentials.password !== "string" ||
-    !secureEqual(credentials.email.trim().toLowerCase(), email) ||
-    !secureEqual(credentials.password, password)
+    credentials.email.length > 254 ||
+    credentials.password.length > 1024
   ) {
     return Response.json({ detail: "Email atau kata sandi salah." }, { status: 401 });
   }
 
+  let account: { email: string; passwordHash: string } | undefined;
+  try {
+    const result = await queryDatabase<{
+      email: string;
+      passwordHash: string;
+    }>(
+      `SELECT email, password_hash AS "passwordHash"
+       FROM admin_accounts
+       WHERE id = 1`,
+    );
+    account = result.rows[0];
+  } catch (error) {
+    console.error("Failed to load the persisted admin account:", error);
+    return Response.json(
+      { detail: "Akun admin tidak dapat diverifikasi saat ini." },
+      { status: 503 },
+    );
+  }
+
+  const email = credentials.email.trim().toLowerCase();
+  const validCredentials =
+    account?.email === email && (await verifyPassword(credentials.password, account.passwordHash));
+  if (!account) {
+    return Response.json(
+      { detail: "Akun admin belum dibuat di database. Konfigurasikan ADMIN_EMAIL dan ADMIN_PASSWORD lalu deploy ulang." },
+      { status: 503 },
+    );
+  }
+  if (!validCredentials) {
+    return Response.json({ detail: "Email atau kata sandi salah." }, { status: 401 });
+  }
+
   const cookieStore = await cookies();
-  cookieStore.set(ADMIN_SESSION_COOKIE, createAdminSession(email), {
+  cookieStore.set(ADMIN_SESSION_COOKIE, createAdminSession(account.email), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

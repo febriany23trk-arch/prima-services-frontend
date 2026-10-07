@@ -2,13 +2,14 @@ import "server-only";
 
 import { Pool, type QueryResultRow } from "pg";
 import { SITE_PAGE_CONTENT_DEFAULTS } from "@/lib/page-content-defaults";
+import { hashPassword } from "@/lib/password-hash";
 
 const globalForPostgres = globalThis as typeof globalThis & {
   postgresPool?: Pool;
   databaseReady?: { schemaVersion: number; promise: Promise<void> };
 };
 
-const DATABASE_SCHEMA_VERSION = 7;
+const DATABASE_SCHEMA_VERSION = 8;
 const previousContactEmail = "febriany23trk@mahasiswa.pcr.ac.id";
 const currentContactEmail = "febrianydeltrida@gmail.com";
 
@@ -99,6 +100,13 @@ export async function ensureDatabase(): Promise<void> {
           content jsonb NOT NULL,
           updated_at timestamptz NOT NULL DEFAULT now()
         );
+        CREATE TABLE IF NOT EXISTS admin_accounts (
+          id smallint PRIMARY KEY CHECK (id = 1),
+          email text NOT NULL UNIQUE,
+          password_hash text NOT NULL,
+          created_at timestamptz NOT NULL DEFAULT now(),
+          updated_at timestamptz NOT NULL DEFAULT now()
+        );
         CREATE TABLE IF NOT EXISTS inquiries (
           id uuid PRIMARY KEY,
           name text NOT NULL,
@@ -127,6 +135,21 @@ export async function ensureDatabase(): Promise<void> {
         CREATE INDEX IF NOT EXISTS inquiries_created_at_idx ON inquiries (created_at);
         CREATE INDEX IF NOT EXISTS inquiries_status_idx ON inquiries (status);
       `);
+
+      const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+      const adminPassword = process.env.ADMIN_PASSWORD;
+      if (adminEmail && adminPassword) {
+        const passwordHash = await hashPassword(adminPassword);
+        await pool.query(
+          `INSERT INTO admin_accounts (id, email, password_hash)
+           VALUES (1, $1, $2)
+           ON CONFLICT (id) DO UPDATE
+           SET email = EXCLUDED.email,
+               password_hash = EXCLUDED.password_hash,
+               updated_at = now()`,
+          [adminEmail, passwordHash],
+        );
+      }
 
       await pool.query(
         "INSERT INTO company_profile (id, data) VALUES (1, $1::jsonb) ON CONFLICT (id) DO NOTHING",
