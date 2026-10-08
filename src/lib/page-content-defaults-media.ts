@@ -2,6 +2,7 @@ import type { PageContentMap } from "@/lib/page-content-types";
 
 export const MEDIA_CONTENT_DEFAULTS: PageContentMap = {
   home: {
+    "hero-slides.count": "4",
     "hero-slides.0.src": "/images/dashboard1.jpg",
     "hero-slides.1.src": "/images/dashboard2.jpg",
     "hero-slides.2.src": "/images/dashboard3.jpg",

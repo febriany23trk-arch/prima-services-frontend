@@ -9,7 +9,7 @@ const globalForPostgres = globalThis as typeof globalThis & {
   databaseReady?: { schemaVersion: number; promise: Promise<void> };
 };
 
-const DATABASE_SCHEMA_VERSION = 8;
+const DATABASE_SCHEMA_VERSION = 9;
 const previousContactEmail = "febriany23trk@mahasiswa.pcr.ac.id";
 const currentContactEmail = "febrianydeltrida@gmail.com";
 
@@ -99,6 +99,12 @@ export async function ensureDatabase(): Promise<void> {
           page_slug text PRIMARY KEY,
           content jsonb NOT NULL,
           updated_at timestamptz NOT NULL DEFAULT now()
+        );
+        CREATE TABLE IF NOT EXISTS uploaded_media (
+          id uuid PRIMARY KEY,
+          content_type text NOT NULL,
+          data bytea NOT NULL,
+          created_at timestamptz NOT NULL DEFAULT now()
         );
         CREATE TABLE IF NOT EXISTS admin_accounts (
           id smallint PRIMARY KEY CHECK (id = 1),

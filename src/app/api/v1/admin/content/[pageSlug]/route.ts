@@ -35,12 +35,23 @@ export async function PUT(request: Request, context: RouteContext) {
 
   const content = input as Record<string, string>;
   const allowedKeys = new Set(Object.keys(SITE_PAGE_CONTENT_DEFAULTS[pageSlug]));
-  if (Object.keys(content).some((key) => !allowedKeys.has(key))) {
+  const hasUnknownKey = Object.keys(content).some((key) => {
+    if (allowedKeys.has(key)) return false;
+    return !(
+      pageSlug === "home" &&
+      /^hero-slides\.(?:[0-9]|[1-9]\d)\.(?:src|alt|href|link|imageSrc)$/.test(key) &&
+      Number(key.split(".")[1]) < 10
+    );
+  });
+  if (hasUnknownKey) {
     return Response.json({ detail: "Konten berisi field yang tidak dikenal." }, { status: 400 });
   }
+
   const invalidLink = Object.entries(content).some(([key, value]) => {
     if (!/(^|\.)(href|src|imageSrc)(\.|$)/i.test(key)) return false;
-    return !/^(\/(?!\/)|https?:\/\/|mailto:|tel:|#[\w-]*)/i.test(value.trim());
+    const val = value.trim();
+    if (val === "") return false; // Mengizinkan string kosong saat gambar/tautan dihapus atau belum diisi
+    return !/^(\/(?!\/)|https?:\/\/|mailto:|tel:|#[\w-]*)/i.test(val);
   });
   if (invalidLink) {
     return Response.json({ detail: "Tautan harus menggunakan URL relatif yang aman, HTTP(S), email, atau telepon." }, { status: 400 });

@@ -66,12 +66,17 @@ export default function Page() {
   content['animated-titles.3'] ?? 'Back Office Ops & Data Management'
 ];
 
-  const HERO_SLIDES = [
-  { id: 1, src: content['hero-slides.0.src'] ?? "/images/dashboard1.jpg", alt: content['hero-slides.0.alt'] ?? 'Dashboard Preview 1' },
-  { id: 2, src: content['hero-slides.1.src'] ?? "/images/dashboard2.jpg", alt: content['hero-slides.1.alt'] ?? 'Dashboard Preview 2' },
-  { id: 3, src: content['hero-slides.2.src'] ?? "/images/dashboard3.jpg", alt: content['hero-slides.2.alt'] ?? 'Dashboard Preview 3' },
-  { id: 4, src: content['hero-slides.3.src'] ?? "/images/dashboard4.jpg", alt: content['hero-slides.3.alt'] ?? 'Dashboard Preview 4' },
-];
+  const heroSlideCount = Math.min(
+    10,
+    Math.max(1, Number.parseInt(content["hero-slides.count"] ?? "4", 10) || 4),
+  );
+  const HERO_SLIDES = Array.from({ length: heroSlideCount }, (_, index) => ({
+    id: index + 1,
+    src:
+      content[`hero-slides.${index}.src`] ??
+      (index < 4 ? `/images/dashboard${index + 1}.jpg` : ""),
+    alt: content[`hero-slides.${index}.alt`] ?? `Dashboard Preview ${index + 1}`,
+  }));
 
   const BPO_MAIN_SERVICE = {
   title: content['bpo-main-service.title'] ?? 'Business Process Outsourcing',

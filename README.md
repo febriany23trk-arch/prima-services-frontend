@@ -23,7 +23,7 @@ Public page navigation automatically records the page path, visitor IP address, 
 
 ### Editing public website content
 
-After signing in, open **Public Page Content** in the admin dashboard to edit published text, links, choices, and media paths for shared navigation/footer, Home, About, Services, Contact, and the Solutions pages. Save with **Save & Publish**; changes are stored in PostgreSQL and are shown to public visitors when their page is loaded or refreshed. Service-catalog records, the Home portfolio gallery, and company profile/contact details remain editable in their existing admin sections. New Contact inquiries are saved to PostgreSQL and emailed to the company email configured in the company profile (with `ADMIN_EMAIL` as a fallback); the customer's email is included as the reply-to address.
+After signing in, open **Public Page Content** in the admin dashboard to edit published text, links, choices, and media paths for shared navigation/footer, Home, About, Services, Contact, and the Solutions pages. Home slider images can be uploaded, previewed, added, and removed, with alternative text for accessibility; uploads (JPEG, PNG, WebP, AVIF, or GIF, up to 4 MB each) are stored in PostgreSQL so they persist on Vercel. Use **Save & Publish** to publish slider and text changes; other page fields are grouped by content section for easier editing. Service-catalog records, the Home portfolio gallery, and company profile/contact details remain editable in their existing admin sections. New Contact inquiries are saved to PostgreSQL and emailed to the company email configured in the company profile (with `ADMIN_EMAIL` as a fallback); the customer's email is included as the reply-to address.
 
 ### Start the database with Docker Compose
 

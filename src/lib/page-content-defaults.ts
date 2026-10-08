@@ -46,10 +46,22 @@ export function mergePageContent(
   slug: keyof typeof SITE_PAGE_CONTENT_DEFAULTS,
   stored: Record<string, string> | undefined,
 ) {
-  return Object.fromEntries(
-    Object.entries(SITE_PAGE_CONTENT_DEFAULTS[slug]).map(([key, fallback]) => [
+  const defaults = SITE_PAGE_CONTENT_DEFAULTS[slug];
+  const merged = Object.fromEntries(
+    Object.entries(defaults).map(([key, fallback]) => [
       key,
       typeof stored?.[key] === "string" ? stored[key] : fallback,
     ]),
   );
+
+  if (slug === "home" && stored) {
+    for (const [key, value] of Object.entries(stored)) {
+      const match = /^hero-slides\.(\d+)\.(src|alt)$/.exec(key);
+      if (match && Number(match[1]) >= 0 && Number(match[1]) < 10 && typeof value === "string") {
+        merged[key] = value;
+      }
+    }
+  }
+
+  return merged;
 }
