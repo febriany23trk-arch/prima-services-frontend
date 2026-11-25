@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { translateText } from "@/lib/translations";
 import {
   ArrowLeft,
   ArrowRight,
@@ -174,6 +176,9 @@ export default async function AdvantageDetailPage({
   const { slug } = await params;
   if (!Object.hasOwn(ADVANTAGES, slug)) notFound();
 
+  const savedLocale = (await cookies()).get("prima-services-locale")?.value;
+  const locale = savedLocale === "id" ? "id" : "en";
+  const translate = (text: string) => translateText(text, locale);
   const advantage = ADVANTAGES[slug as AdvantageSlug];
   const Icon = advantage.icon;
 
@@ -185,26 +190,26 @@ export default async function AdvantageDetailPage({
           className="inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-slate-600 transition-colors hover:text-indigo-700"
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Home
+          {translate("Kembali ke Home")}
         </Link>
 
         <section className="mt-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
           <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:p-14">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">
-                {advantage.eyebrow}
+                {translate(advantage.eyebrow)}
               </p>
               <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-5xl">
-                {advantage.title}
+                {translate(advantage.title)}
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-                {advantage.summary}
+                {translate(advantage.summary)}
               </p>
               <Link
                 href="/contact"
                 className="mt-8 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-indigo-600/20 transition-colors hover:bg-indigo-700"
               >
-                Diskusikan Kebutuhan Anda
+                {translate("Diskusikan Kebutuhan Anda")}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -219,12 +224,12 @@ export default async function AdvantageDetailPage({
         <section className="mt-12 grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">
-              Pendekatan kami
+              {translate("Pendekatan kami")}
             </p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-              Solusi yang berangkat dari kebutuhan bisnis
+              {translate("Solusi yang berangkat dari kebutuhan bisnis")}
             </h2>
-            <p className="mt-4 leading-7 text-slate-600">{advantage.intro}</p>
+            <p className="mt-4 leading-7 text-slate-600">{translate(advantage.intro)}</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             {advantage.benefits.map((benefit) => (
@@ -233,9 +238,9 @@ export default async function AdvantageDetailPage({
                 className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
               >
                 <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-                <h3 className="mt-4 font-bold">{benefit.title}</h3>
+                <h3 className="mt-4 font-bold">{translate(benefit.title)}</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {benefit.description}
+                  {translate(benefit.description)}
                 </p>
               </article>
             ))}
@@ -243,14 +248,14 @@ export default async function AdvantageDetailPage({
         </section>
 
         <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-10">
-          <h2 className="text-xl font-bold sm:text-2xl">Bagaimana kami bekerja</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">{translate("Bagaimana kami bekerja")}</h2>
           <ol className="mt-6 grid gap-4 sm:grid-cols-2">
             {advantage.process.map((step, index) => (
               <li key={step} className="flex gap-4 rounded-2xl bg-slate-50 p-4">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-sm font-bold text-indigo-700">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <p className="self-center text-sm leading-6 text-slate-700">{step}</p>
+                <p className="self-center text-sm leading-6 text-slate-700">{translate(step)}</p>
               </li>
             ))}
           </ol>
@@ -259,17 +264,17 @@ export default async function AdvantageDetailPage({
         <section className="mt-12 flex flex-col items-start justify-between gap-5 rounded-3xl bg-slate-900 p-7 text-white sm:flex-row sm:items-center sm:p-10">
           <div>
             <h2 className="text-xl font-bold sm:text-2xl">
-              Mari rancang pendekatan yang tepat
+              {translate("Mari rancang pendekatan yang tepat")}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
-              Ceritakan kebutuhan dan tujuan Anda kepada tim Prima Services.
+              {translate("Ceritakan kebutuhan dan tujuan Anda kepada tim Prima Services.")}
             </p>
           </div>
           <Link
             href="/contact"
             className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-colors hover:bg-indigo-50"
           >
-            Hubungi Kami
+            {translate("Hubungi Kami")}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </section>

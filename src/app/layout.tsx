@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
+import { LocaleProvider } from "@/lib/i18n";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,7 +36,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white text-slate-900 font-sans">
-        <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
+        <LocaleProvider>
+          <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
+        </LocaleProvider>
       </body>
     </html>
   );

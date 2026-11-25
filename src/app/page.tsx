@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePageContent } from "@/lib/use-page-content";
+import { useLocale } from "@/lib/i18n";
 import Link from "next/link";
 import Image from "next/image";
 import { getPortfolios, type PortfolioItem } from "@/lib/portfolioService";
@@ -10,7 +11,6 @@ import {
   Headphones,
   Package,
   MonitorCheck,
-  ChevronDown,
   Sparkles,
   ArrowRight,
   ShieldCheck,
@@ -28,43 +28,53 @@ import {
   ArrowUpRight,
   Activity,
   TrendingUp,
-  Workflow
+  Users,
+  Settings,
+  Cloud,
+  BarChart3,
+  PhoneCall,
+  MessageSquareText,
+  UserCheck,
+  PlugZap,
+  MessagesSquare,
+  Bot,
+  Share2,
+  BookOpen,
+  LayoutDashboard,
+  Code2,
+  Server,
+  X
 } from "lucide-react";
 
-// --- DATA CONSTANTS ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+type IntegrationPlatform = {
+  slug: string;
+  name: string;
+  subtitle: string;
+  logoSrc: string;
+  fallbackIcon: React.ComponentType<{ className?: string }>;
+  title: string;
+  sub: string;
+  desc: string;
+  fullDescription: string;
+  accent: string;
+  badgeBg: string;
+  iconBg: string;
+  features: {
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[];
+};
 
 export default function Page() {
   const { content, error: contentError } = usePageContent('home');
+  const { translate } = useLocale();
 
   const ANIMATED_TITLES = [
-  content['animated-titles.0'] ?? 'IT Managed Services & Talent Management',
-  content['animated-titles.1'] ?? 'Ops Services & Process Optimization',
-  content['animated-titles.2'] ?? 'Customer Support & CX Management',
-  content['animated-titles.3'] ?? 'Back Office Ops & Data Management'
-];
+    content['animated-titles.0'] ?? 'IT Managed Services & Talent Management',
+    content['animated-titles.1'] ?? 'Ops Services & Process Optimization',
+    content['animated-titles.2'] ?? 'Customer Support & CX Management',
+    content['animated-titles.3'] ?? 'Back Office Ops & Data Management'
+  ];
 
   const heroSlideCount = Math.min(
     10,
@@ -78,283 +88,293 @@ export default function Page() {
     alt: content[`hero-slides.${index}.alt`] ?? `Dashboard Preview ${index + 1}`,
   }));
 
-  const BPO_MAIN_SERVICE = {
-  title: content['bpo-main-service.title'] ?? 'Business Process Outsourcing',
-  icon: Workflow,
-  description: content['bpo-main-service.description'] ?? 'Layanan Business Process Outsourcing (BPO) kami menyediakan solusi operasional bisnis yang komprehensif, mencakup layanan dukungan pelanggan nonstop melalui 24/7 Contact Center & Customer Service serta pendorong pertumbuhan bisnis lewat Telemarketing & Sales Support. Untuk pengelolaan keuangan dan validasi, kami menangani penagihan secara profesional melalui Collections & Payment Follow-up dan menjamin keamanan data pengguna melalui KYC & Data Verification.',
-};
-
-  const BPO_SUB_SERVICES = [
-  {
-    slug: "recruitment-headhunter",
-    title: content['bpo-sub-services.0.title'] ?? 'Recruitment & Headhunter',
-    description: content['bpo-sub-services.0.description'] ?? 'Layanan pencarian dan penyediaan tenaga kerja profesional serta eksekutif yang disesuaikan dengan kebutuhan bisnis Anda.',
-    imageSrc: content['bpo-sub-services.0.imageSrc'] ?? "/images/talent-mapping.png",
-    points: [
-      content['bpo-sub-services.0.points.0'] ?? 'Staff to C-Level Search',
-      content['bpo-sub-services.0.points.1'] ?? 'Recruitment Process Outsourcing (RPO)',
-      content['bpo-sub-services.0.points.2'] ?? 'Talent Mapping & Market Intelligence',
-      content['bpo-sub-services.0.points.3'] ?? 'Contract Staffing & Payroll Services',
-      content['bpo-sub-services.0.points.4'] ?? 'Technical & Programming Talent Search',
-    ],
-  },
-  {
-    slug: "outsourcing-solution",
-    title: content['bpo-sub-services.1.title'] ?? 'Outsourcing Solution',
-    description: content['bpo-sub-services.1.description'] ?? 'Solusi alih daya operasional untuk meningkatkan efisiensi dan pengelolaan tim kerja secara fleksibel.',
-    imageSrc: content['bpo-sub-services.1.imageSrc'] ?? "/images/contract-payroll.png",
-    points: [
-      content['bpo-sub-services.1.points.0'] ?? 'Employee Outsourcing',
-      content['bpo-sub-services.1.points.1'] ?? 'Remote Workforce Management',
-      content['bpo-sub-services.1.points.2'] ?? 'Virtual Team Setup & Monitoring',
-      content['bpo-sub-services.1.points.3'] ?? 'Cross-Border Compliance & HR Support',
-    ],
-  },
-  {
-    slug: "global-relations-business-support",
-    title: content['bpo-sub-services.2.title'] ?? 'Global Relations & Business Support',
-    description: content['bpo-sub-services.2.description'] ?? 'Dukungan ekspansi bisnis internasional dan konsultasi strategis lintas negara di Asia Tenggara hingga Eropa.',
-    imageSrc: content['bpo-sub-services.2.imageSrc'] ?? "/images/technical-talent.png",
-    points: [
-      content['bpo-sub-services.2.points.0'] ?? 'Building international partnerships across SEA, East Asia, Europe',
-      content['bpo-sub-services.2.points.1'] ?? 'Market entry advisory & localization support',
-      content['bpo-sub-services.2.points.2'] ?? 'Business matching and cross-border collaboration',
-      content['bpo-sub-services.2.points.3'] ?? 'Strategic consulting for global expansion',
-      content['bpo-sub-services.2.points.4'] ?? 'Research & Market Insight capabilities',
-    ],
-  },
-];
-
-  const BPO_CARDS = [
-  {
-    slug: "cx-contact-center",
-    title: content['bpo-cards.0.title'] ?? 'CX | Contact Center\n(Customer Service)',
-    desc: content['bpo-cards.0.desc'] ?? 'Diagnosa, Map Journeys & Scripts, Operate with QC, Weekly Reporting & Improvements',
-    imageSrc: content['bpo-cards.0.imageSrc'] ?? "/images/icon1.png",
-    alt: content['bpo-cards.0.alt'] ?? 'CX Contact Center Avatar',
-  },
-  {
-    slug: "sales-telesales",
-    title: content['bpo-cards.1.title'] ?? 'Sales Telesales',
-    desc: content['bpo-cards.1.desc'] ?? 'Segment & Script, Outreach & Logging, Weekly Coaching, Optimize Message & Target',
-    imageSrc: content['bpo-cards.1.imageSrc'] ?? "/images/icon2.png",
-    alt: content['bpo-cards.1.alt'] ?? 'Sales Telesales Avatar',
-  },
-  {
-    slug: "collection",
-    title: content['bpo-cards.2.title'] ?? 'Collection',
-    desc: content['bpo-cards.2.desc'] ?? 'Bucket Mapping, Communication Strategy, Execution & Negotiation, Results Review',
-    imageSrc: content['bpo-cards.2.imageSrc'] ?? "/images/icon3.png",
-    alt: content['bpo-cards.2.alt'] ?? 'Collection Icon',
-  },
-  {
-    slug: "kyc-verification",
-    title: content['bpo-cards.3.title'] ?? 'KYC Verification',
-    desc: content['bpo-cards.3.desc'] ?? 'Data Intake, Stepwise Verification, Clarification, Archiving & Reporting',
-    imageSrc: content['bpo-cards.3.imageSrc'] ?? "/images/icon4.png",
-    alt: content['bpo-cards.3.alt'] ?? 'KYC Icon',
-  },
-];
-
   const CONTROL_ITEMS = [
-  {
-    slug: "sop-operasional",
-    icon: Puzzle,
-    title: content['control-items.0.title'] ?? 'Short SOPs per Function',
-    description: content['control-items.0.description'] ?? 'Easy to understand and repeat across teams with clear, standardized operational guidelines.',
-    accentColor: "from-blue-600 via-sky-500 to-cyan-400",
-    badgeBg: "bg-blue-50/80 text-blue-600 border-blue-200/80",
-  },
-  {
-    slug: "quality-assurance-coaching",
-    icon: Handshake,
-    title: content['control-items.1.title'] ?? 'QA Scorecards & Coaching',
-    description: content['control-items.1.description'] ?? 'Steady quality and performance consistency through regular feedback loops and evaluation.',
-    accentColor: "from-amber-500 via-orange-500 to-yellow-400",
-    badgeBg: "bg-amber-50/80 text-amber-600 border-amber-200/80",
-  },
-  {
-    slug: "dashboard-real-time",
-    icon: LineChart,
-    title: content['control-items.2.title'] ?? 'Real-time Dashboards',
-    description: content['control-items.2.description'] ?? 'Faster, evidence-based decisions with live data analytics and a clean audit trail.',
-    accentColor: "from-indigo-600 via-blue-600 to-sky-400",
-    badgeBg: "bg-indigo-50/80 text-indigo-600 border-indigo-200/80",
-  },
-];
+    {
+      slug: "sop-operasional",
+      icon: Puzzle,
+      title: content['control-items.0.title'] ?? 'Short SOPs per Function',
+      accentColor: "from-blue-600 via-sky-500 to-cyan-400",
+      badgeBg: "bg-blue-50/80 text-blue-600 border-blue-200/80",
+    },
+    {
+      slug: "quality-assurance-coaching",
+      icon: Handshake,
+      title: content['control-items.1.title'] ?? 'QA Scorecards & Coaching',
+      accentColor: "from-amber-500 via-orange-500 to-yellow-400",
+      badgeBg: "bg-amber-50/80 text-amber-600 border-amber-200/80",
+    },
+    {
+      slug: "dashboard-real-time",
+      icon: LineChart,
+      title: content['control-items.2.title'] ?? 'Real-time Dashboards',
+      accentColor: "from-indigo-600 via-blue-600 to-sky-400",
+      badgeBg: "bg-indigo-50/80 text-indigo-600 border-indigo-200/80",
+    },
+  ];
 
-  const INTEGRATIONS = [
-  {
-    logoSrc: content['integrations.0.logoSrc'] ?? "/images/enable1.png",
-    title: content['integrations.0.title'] ?? 'Sobot (Omnichannel Platform)',
-    sub: content['integrations.0.sub'] ?? 'One place for voice / chat / tickets',
-    desc: content['integrations.0.desc'] ?? 'Shorter response times & zero tab-hopping',
-    accent: "bg-gradient-to-r from-sky-400 to-blue-600",
-  },
-  {
-    logoSrc: content['integrations.1.logoSrc'] ?? "/images/enable2.png",
-    title: content['integrations.1.title'] ?? 'Mitel (Voice Analytics & AI IVR)',
-    sub: content['integrations.1.sub'] ?? 'Auto transcripts, summaries, talk/listen balance & QA dashboards',
-    desc: content['integrations.1.desc'] ?? 'Objective coaching & actionable insights',
-    accent: "bg-gradient-to-r from-indigo-500 to-purple-600",
-  },
-  {
-    logoSrc: content['integrations.2.logoSrc'] ?? "/images/enable3.png",
-    title: content['integrations.2.title'] ?? 'Selective Integrations Hub',
-    sub: content['integrations.2.sub'] ?? 'CRM & BI connectors for seamless data flow',
-    desc: content['integrations.2.desc'] ?? 'Data stays connected, never scattered',
-    accent: "bg-gradient-to-r from-blue-500 to-cyan-500",
-  },
-];
+  const INTEGRATIONS: IntegrationPlatform[] = [
+    {
+      slug: "google-partner",
+      name: "Google Partner",
+      subtitle: "Cloud, Productivity & Collaboration",
+      logoSrc: content['integrations.0.logoSrc'] ?? "/images/enable3.png",
+      fallbackIcon: Cpu,
+      title: content['integrations.0.title'] ?? 'Google Partner (Cloud, Productivity & Collaboration)',
+      sub:
+        content['integrations.0.sub'] ??
+        'Google Cloud Infrastructure, Google Workspace, Data & Analytics, Security & Compliance',
+      desc:
+        content['integrations.0.desc'] ??
+        'Work smarter & scale faster with unified cloud platforms',
+      fullDescription:
+        'Cloud, productivity, and collaboration solutions to help organizations work smarter and scale faster.',
+      accent: "bg-gradient-to-r from-blue-500 via-emerald-500 to-amber-500",
+      badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
+      iconBg: "bg-blue-50 text-blue-600 border-blue-200/80",
+      features: [
+        { label: "Google Cloud Infrastructure", icon: Cloud },
+        { label: "Google Workspace", icon: Users },
+        { label: "Data & Analytics", icon: BarChart3 },
+        { label: "Security & Compliance", icon: ShieldCheck },
+      ],
+    },
+    {
+      slug: "mitel-voice-intelligence",
+      name: "MiiTel",
+      subtitle: "Voice Intelligence",
+      logoSrc: content['integrations.1.logoSrc'] ?? "/images/enable2.png",
+      fallbackIcon: Activity,
+      title: content['integrations.1.title'] ?? 'MiiTel (Voice Intelligence)',
+      sub:
+        content['integrations.1.sub'] ??
+        'Voice Analytics, Conversation Intelligence, Quality Management, Agent Coaching & CRM/CC Integrations',
+      desc:
+        content['integrations.1.desc'] ??
+        'Turns conversations into measurable performance',
+      fullDescription:
+        'AI-powered voice analytics that turns conversations into measurable performance.',
+      accent: "bg-gradient-to-r from-indigo-500 to-purple-600",
+      badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+      iconBg: "bg-sky-50 text-sky-600 border-sky-200/80",
+      features: [
+        { label: "Voice Analytics", icon: PhoneCall },
+        { label: "Conversation Intelligence", icon: MessageSquareText },
+        { label: "Quality Management", icon: CheckCircle2 },
+        { label: "Agent Coaching", icon: UserCheck },
+        { label: "CRM / CC Integrations (Optional Dialer & AI IVR)", icon: PlugZap },
+      ],
+    },
+    {
+      slug: "sobot-customer-engagement",
+      name: "Sobot",
+      subtitle: "Customer Engagement",
+      logoSrc: content['integrations.2.logoSrc'] ?? "/images/enable1.png",
+      fallbackIcon: Headphones,
+      title: content['integrations.2.title'] ?? 'Sobot (Customer Engagement)',
+      sub:
+        content['integrations.2.sub'] ??
+        'Omnichannel Messaging, Chatbot & Automation, CRM Integration, Knowledge Management & Unified Agent Workspace',
+      desc:
+        content['integrations.2.desc'] ??
+        'Seamless & consistent omnichannel experiences',
+      fullDescription:
+        'Omnichannel customer engagement platform to deliver seamless and consistent experiences.',
+      accent: "bg-gradient-to-r from-sky-400 to-teal-500",
+      badgeBg: "bg-teal-50 text-teal-700 border-teal-200",
+      iconBg: "bg-teal-50 text-teal-600 border-teal-200/80",
+      features: [
+        { label: "Omnichannel Messaging", icon: MessagesSquare },
+        { label: "Chatbot & Automation", icon: Bot },
+        { label: "CRM Integration", icon: Share2 },
+        { label: "Knowledge Management", icon: BookOpen },
+        { label: "Unified Agent Workspace & Reporting", icon: LayoutDashboard },
+      ],
+    },
+    {
+      slug: "stack-technology-solutions",
+      name: "STACK",
+      subtitle: "Technology & Digital Solutions",
+      logoSrc: content['integrations.3.logoSrc'] ?? "/images/enable4.png",
+      fallbackIcon: Layers,
+      title: content['integrations.3.title'] ?? 'STACK (Technology & Digital Solutions)',
+      sub:
+        content['integrations.3.sub'] ??
+        'Digital Platform, System Integration, Product Engineering, Managed Services & Support',
+      desc:
+        content['integrations.3.desc'] ??
+        'Accelerate business transformation with digital products',
+      fullDescription:
+        'Advanced technology solutions and digital products to accelerate business transformation.',
+      accent: "bg-gradient-to-r from-violet-600 to-indigo-600",
+      badgeBg: "bg-violet-50 text-violet-700 border-violet-200",
+      iconBg: "bg-violet-50 text-violet-600 border-violet-200/80",
+      features: [
+        { label: "Digital Platform", icon: Code2 },
+        { label: "System Integration", icon: Puzzle },
+        { label: "Product Engineering", icon: Settings },
+        { label: "Managed Services & Support", icon: Server },
+      ],
+    },
+  ];
 
   const SCALE_CARDS = [
-  {
-    id: "employee",
-    step: content['scale-cards.0.step'] ?? '01',
-    title: content['scale-cards.0.title'] ?? 'Employee & Team Outsourcing',
-    imageSrc: content['scale-cards.0.imageSrc'] ?? "/images/scale-employee.png",
-    alt: content['scale-cards.0.alt'] ?? 'Employee & Team Outsourcing Icon',
-    badge: content['scale-cards.0.badge'] ?? 'Scale Rapidly'
-  },
-  {
-    id: "remote",
-    step: content['scale-cards.1.step'] ?? '02',
-    title: content['scale-cards.1.title'] ?? 'Remote Workforce Management',
-    imageSrc: content['scale-cards.1.imageSrc'] ?? "/images/scale-remote.png",
-    alt: content['scale-cards.1.alt'] ?? 'Remote Workforce Management Icon',
-    badge: content['scale-cards.1.badge'] ?? 'Global Reach'
-  },
-  {
-    id: "virtual",
-    step: content['scale-cards.2.step'] ?? '03',
-    title: content['scale-cards.2.title'] ?? 'Virtual Team Setup & Monitoring',
-    imageSrc: content['scale-cards.2.imageSrc'] ?? "/images/scale-virtual.png",
-    alt: content['scale-cards.2.alt'] ?? 'Virtual Team Setup & Monitoring Icon',
-    badge: content['scale-cards.2.badge'] ?? 'Real-time Control'
-  },
-  {
-    id: "compliance",
-    step: content['scale-cards.3.step'] ?? '04',
-    title: content['scale-cards.3.title'] ?? 'Cross-Border Compliance & HR Support',
-    imageSrc: content['scale-cards.3.imageSrc'] ?? "/images/scale-compliance.png",
-    alt: content['scale-cards.3.alt'] ?? 'Cross-Border Compliance & HR Support Icon',
-    badge: content['scale-cards.3.badge'] ?? '100% Compliant'
-  },
-];
+    {
+      id: "employee",
+      slug: "employee-team-outsourcing",
+      step: content['scale-cards.0.step'] ?? '01',
+      title: content['scale-cards.0.title'] ?? 'Employee & Team Outsourcing',
+      imageSrc: content['scale-cards.0.imageSrc'] ?? "/images/scale-employee.png",
+      alt: content['scale-cards.0.alt'] ?? 'Employee & Team Outsourcing Icon',
+      badge: content['scale-cards.0.badge'] ?? 'Scale Rapidly'
+    },
+    {
+      id: "remote",
+      slug: "remote-workforce-management",
+      step: content['scale-cards.1.step'] ?? '02',
+      title: content['scale-cards.1.title'] ?? 'Remote Workforce Management',
+      imageSrc: content['scale-cards.1.imageSrc'] ?? "/images/scale-remote.png",
+      alt: content['scale-cards.1.alt'] ?? 'Remote Workforce Management Icon',
+      badge: content['scale-cards.1.badge'] ?? 'Global Reach'
+    },
+    {
+      id: "virtual",
+      slug: "virtual-team-setup-monitoring",
+      step: content['scale-cards.2.step'] ?? '03',
+      title: content['scale-cards.2.title'] ?? 'Virtual Team Setup & Monitoring',
+      imageSrc: content['scale-cards.2.imageSrc'] ?? "/images/scale-virtual.png",
+      alt: content['scale-cards.2.alt'] ?? 'Virtual Team Setup & Monitoring Icon',
+      badge: content['scale-cards.2.badge'] ?? 'Real-time Control'
+    },
+    {
+      id: "compliance",
+      slug: "cross-border-compliance-hr-support",
+      step: content['scale-cards.3.step'] ?? '04',
+      title: content['scale-cards.3.title'] ?? 'Cross-Border Compliance & HR Support',
+      imageSrc: content['scale-cards.3.imageSrc'] ?? "/images/scale-compliance.png",
+      alt: content['scale-cards.3.alt'] ?? 'Cross-Border Compliance & HR Support Icon',
+      badge: content['scale-cards.3.badge'] ?? '100% Compliant'
+    },
+  ];
 
   const DELIVER_STEPS = [
-  {
-    step: content['deliver-steps.0.step'] ?? '01',
-    title: content['deliver-steps.0.title'] ?? 'Client Need Identification',
-    desc: content['deliver-steps.0.desc'] ?? 'Analisis mendalam terhadap kebutuhan & kualifikasi spesifik bisnis Anda.',
-    imageSrc: content['deliver-steps.0.imageSrc'] ?? "/images/icon1.png",
-    alt: content['deliver-steps.0.alt'] ?? 'Client Need Identification Icon',
-  },
-  {
-    step: content['deliver-steps.1.step'] ?? '02',
-    title: content['deliver-steps.1.title'] ?? 'Talent / Team Selection',
-    desc: content['deliver-steps.1.desc'] ?? 'Proses seleksi ketat untuk mencocokkan kandidat/tim terbaik.',
-    imageSrc: content['deliver-steps.1.imageSrc'] ?? "/images/icon2.png",
-    alt: content['deliver-steps.1.alt'] ?? 'Talent Selection Icon',
-  },
-  {
-    step: content['deliver-steps.2.step'] ?? '03',
-    title: content['deliver-steps.2.title'] ?? 'Onboarding & Equipment Setup',
-    desc: content['deliver-steps.2.desc'] ?? 'Penyiapan infrastruktur, perangkat, dan integrasi awal tim.',
-    imageSrc: content['deliver-steps.2.imageSrc'] ?? "/images/icon3.png",
-    alt: content['deliver-steps.2.alt'] ?? 'Onboarding & Setup Icon',
-  },
-  {
-    step: content['deliver-steps.3.step'] ?? '04',
-    title: content['deliver-steps.3.title'] ?? 'Live Monitoring & Reporting',
-    desc: content['deliver-steps.3.desc'] ?? 'Pengawasan operasional harian beserta laporan kinerja real-time.',
-    imageSrc: content['deliver-steps.3.imageSrc'] ?? "/images/icon4.png",
-    alt: content['deliver-steps.3.alt'] ?? 'Live Monitoring Icon',
-  },
-];
+    {
+      slug: "outsourcing-solution",
+      step: content['deliver-steps.0.step'] ?? '01',
+      title: content['deliver-steps.0.title'] ?? 'Client Need Identification',
+      imageSrc: content['deliver-steps.0.imageSrc'] ?? "/images/icon1.png",
+      alt: content['deliver-steps.0.alt'] ?? 'Client Need Identification Icon',
+    },
+    {
+      slug: "outsourcing-solution",
+      step: content['deliver-steps.1.step'] ?? '02',
+      title: content['deliver-steps.1.title'] ?? 'Talent / Team Selection',
+      imageSrc: content['deliver-steps.1.imageSrc'] ?? "/images/icon2.png",
+      alt: content['deliver-steps.1.alt'] ?? 'Talent Selection Icon',
+    },
+    {
+      slug: "outsourcing-solution",
+      step: content['deliver-steps.2.step'] ?? '03',
+      title: content['deliver-steps.2.title'] ?? 'Onboarding & Equipment Setup',
+      imageSrc: content['deliver-steps.2.imageSrc'] ?? "/images/icon3.png",
+      alt: content['deliver-steps.2.alt'] ?? 'Onboarding & Setup Icon',
+    },
+    {
+      slug: "outsourcing-solution",
+      step: content['deliver-steps.3.step'] ?? '04',
+      title: content['deliver-steps.3.title'] ?? 'Live Monitoring & Reporting',
+      imageSrc: content['deliver-steps.3.imageSrc'] ?? "/images/icon4.png",
+      alt: content['deliver-steps.3.alt'] ?? 'Live Monitoring Icon',
+    },
+  ];
 
   const GLOBAL_POINTS = [
-  { text: content['global-points.0.text'] ?? 'Connect with potential partners, clients, or distributors across strategic Asian & European markets.' },
-  { text: content['global-points.1.text'] ?? 'Expert guidance on regulatory frameworks, local culture, and tailored business practices.' },
-  { text: content['global-points.2.text'] ?? 'Establish a robust local operational footprint with flexible, fully compliant solutions.' },
-  { text: content['global-points.3.text'] ?? 'Gain priority access to a curated network of investors, suppliers, and strategic industry allies.' },
-];
+    { text: content['global-points.0.text'] ?? 'Connect with potential partners, clients, or distributors across strategic Asian & European markets.' },
+    { text: content['global-points.1.text'] ?? 'Expert guidance on regulatory frameworks, local culture, and tailored business practices.' },
+    { text: content['global-points.2.text'] ?? 'Establish a robust local operational footprint with flexible, fully compliant solutions.' },
+    { text: content['global-points.3.text'] ?? 'Gain priority access to a curated network of investors, suppliers, and strategic industry allies.' },
+  ];
 
   const GLOBAL_STEPS = [
-  {
-    step: content['global-steps.0.step'] ?? '01',
-    title: content['global-steps.0.title'] ?? 'Discovery Call &\nBusiness Need',
-    desc: content['global-steps.0.desc'] ?? 'Pemetaan kebutuhan bisnis awal dan konsultasi eksklusif.',
-    icon: Headphones,
-    isActive: false,
-  },
-  {
-    step: content['global-steps.1.step'] ?? '02',
-    title: content['global-steps.1.title'] ?? 'Market Research &\nLocalization Plan',
-    desc: content['global-steps.1.desc'] ?? 'Riset pasar mendalam dan penyesuaian strategi lokal.',
-    icon: Target,
-    isActive: false,
-  },
-  {
-    step: content['global-steps.2.step'] ?? '03',
-    title: content['global-steps.2.title'] ?? 'Business Matching &\nLocal Contacts',
-    desc: content['global-steps.2.desc'] ?? 'Menghubungkan dengan mitra dan jaringan lokal tepercaya.',
-    icon: Package,
-    isActive: true,
-  },
-  {
-    step: content['global-steps.3.step'] ?? '04',
-    title: content['global-steps.3.title'] ?? 'Virtual Rep Office &\nOps Setup',
-    desc: content['global-steps.3.desc'] ?? 'Pendirian kantor virtual dan infrastruktur operasional.',
-    icon: Cpu,
-    isActive: false,
-  },
-  {
-    step: content['global-steps.4.step'] ?? '05',
-    title: content['global-steps.4.title'] ?? 'Ongoing Advisory &\nMonitoring',
-    desc: content['global-steps.4.desc'] ?? 'Dukungan konsultasi berkala dan pengawasan kualitatif.',
-    icon: MonitorCheck,
-    isActive: false,
-  },
-];
+    {
+      step: content['global-steps.0.step'] ?? '01',
+      title: content['global-steps.0.title'] ?? 'Discovery Call &\nBusiness Need',
+      desc: content['global-steps.0.desc'] ?? 'Pemetaan kebutuhan bisnis awal dan konsultasi eksklusif.',
+      icon: Headphones,
+      isActive: false,
+    },
+    {
+      step: content['global-steps.1.step'] ?? '02',
+      title: content['global-steps.1.title'] ?? 'Market Research &\nLocalization Plan',
+      desc: content['global-steps.1.desc'] ?? 'Riset pasar mendalam dan penyesuaian strategi lokal.',
+      icon: Target,
+      isActive: false,
+    },
+    {
+      step: content['global-steps.2.step'] ?? '03',
+      title: content['global-steps.2.title'] ?? 'Business Matching &\nLocal Contacts',
+      desc: content['global-steps.2.desc'] ?? 'Menghubungkan dengan mitra dan jaringan lokal tepercaya.',
+      icon: Package,
+      isActive: true,
+    },
+    {
+      step: content['global-steps.3.step'] ?? '04',
+      title: content['global-steps.3.title'] ?? 'Virtual Rep Office &\nOps Setup',
+      desc: content['global-steps.3.desc'] ?? 'Pendirian kantor virtual dan infrastruktur operasional.',
+      icon: Cpu,
+      isActive: false,
+    },
+    {
+      step: content['global-steps.4.step'] ?? '05',
+      title: content['global-steps.4.title'] ?? 'Ongoing Advisory &\nMonitoring',
+      desc: content['global-steps.4.desc'] ?? 'Dukungan konsultasi berkala dan pengawasan kualitatif.',
+      icon: MonitorCheck,
+      isActive: false,
+    },
+  ];
 
-  const FEATURE_HIGHLIGHTS = [
-  {
-    slug: "layanan-ujung-ke-ujung",
-    title: content['feature-highlights.0.title'] ?? 'Layanan Ujung-ke-Ujung',
-    description: content['feature-highlights.0.description'] ?? 'Layanan menyeluruh dari analisis, perancangan, pengembangan, hingga pemeliharaan oleh tim profesional.',
-    icon: Puzzle,
-    bgColor: "bg-blue-50 text-blue-600 border-blue-200/80",
-  },
-  {
-    slug: "mitra-resmi-terpercaya",
-    title: content['feature-highlights.1.title'] ?? 'Mitra Resmi & Tepercaya',
-    description: content['feature-highlights.1.description'] ?? 'Mitra resmi Google dan Sobot.io, bukti pengakuan standar global atas solusi andal kami.',
-    icon: Handshake,
-    bgColor: "bg-sky-50 text-sky-600 border-sky-200/80",
-  },
-  {
-    slug: "roi-terukur",
-    title: content['feature-highlights.2.title'] ?? 'ROI yang Terukur',
-    description: content['feature-highlights.2.description'] ?? 'Berfokus pada efisiensi biaya, akselerasi proses, serta kepuasan pelanggan secara konkrit.',
-    icon: LineChart,
-    bgColor: "bg-indigo-50 text-indigo-600 border-indigo-200/80",
-  },
-  {
-    slug: "keamanan-kepatuhan",
-    title: content['feature-highlights.3.title'] ?? 'Keamanan & Kepatuhan',
-    description: content['feature-highlights.3.description'] ?? 'Prioritas tertinggi pada kepatuhan regulasi dan standar keamanan data global.',
-    icon: Shield,
-    bgColor: "bg-amber-50 text-amber-600 border-amber-200/80",
-  },
-];
-
-  const [isBpoOpen, setIsBpoOpen] = useState<boolean>(true);
+  const [governanceTab, setGovernanceTab] = useState<'control' | 'enable'>('enable');
+  const [scaleTab, setScaleTab] = useState<'scale' | 'deliver'>('scale');
+  const [selectedPlatform, setSelectedPlatform] = useState<IntegrationPlatform | null>(null);
   const [titleIndex, setTitleIndex] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [heroSlideIndex, setHeroSlideIndex] = useState<number>(0);
   const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
   const [portfolioError, setPortfolioError] = useState("");
+  const [failedLogos, setFailedLogos] = useState<Record<string, boolean>>({});
+
+  // Simpan tab aktif dan kembalikan posisi scroll tepat di kartu yang ditekan
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const savedScaleTab = sessionStorage.getItem("home_scale_tab");
+    if (savedScaleTab === "scale" || savedScaleTab === "deliver") {
+      setScaleTab(savedScaleTab);
+    }
+
+    const savedGovernanceTab = sessionStorage.getItem("home_governance_tab");
+    if (savedGovernanceTab === "control" || savedGovernanceTab === "enable") {
+      setGovernanceTab(savedGovernanceTab);
+    }
+
+    const savedScrollY = sessionStorage.getItem("home_scroll_y");
+    if (savedScrollY) {
+      const targetY = Number(savedScrollY);
+      sessionStorage.removeItem("home_scroll_y");
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          window.scrollTo({ top: targetY, behavior: "instant" });
+        }, 60);
+      });
+    }
+  }, []);
+
+  const handleCardClick = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("home_scroll_y", String(window.scrollY));
+      sessionStorage.setItem("home_scale_tab", scaleTab);
+      sessionStorage.setItem("home_governance_tab", governanceTab);
+    }
+  };
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -391,26 +411,30 @@ export default function Page() {
     };
   }, []);
 
-  const MainIcon = BPO_MAIN_SERVICE.icon;
+  // Daftar judul kartu portofolio yang dinonaktifkan kliknya
+  const isDisabledPortfolio = (title: string) => {
+    const normalized = title.toLowerCase().trim();
+    return (
+      normalized.includes("performance & insights analytics") ||
+      normalized.includes("real-time telemetry center")
+    );
+  };
 
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col selection:bg-blue-600 selection:text-white antialiased overflow-x-hidden">
       {contentError && (
         <p role="alert" className="mx-auto max-w-7xl px-4 py-2 text-center text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg">
-          {contentError}
+          {translate(contentError)}
         </p>
       )}
 
-      {/* ================= HERO SECTION ================= */}
+      {/* ================= 1. HERO SECTION ================= */}
       <section className="relative bg-gradient-to-b from-slate-50/90 via-white to-blue-50/50 text-slate-900 overflow-hidden pt-4 pb-6 lg:pt-6 lg:pb-8 px-6 border-b border-slate-200/80">
-        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-blue-400/25 via-sky-300/15 to-transparent rounded-full blur-[140px] animate-pulse pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-gradient-to-tl from-indigo-300/25 via-blue-200/20 to-transparent rounded-full blur-[160px] animate-pulse pointer-events-none" style={{ animationDuration: "9s" }} />
-
-        <div className="absolute top-1/4 left-10 w-32 h-32 bg-blue-300/20 rounded-full blur-2xl animate-float pointer-events-none" />
-        <div className="absolute bottom-1/3 right-12 w-40 h-40 bg-indigo-300/20 rounded-full blur-2xl animate-float-delayed pointer-events-none" />
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-blue-400/20 via-sky-300/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[550px] h-[550px] bg-gradient-to-tl from-indigo-300/20 via-blue-200/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.035]"
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
           style={{
             backgroundImage: `radial-gradient(#0f172a 1px, transparent 1px)`,
             backgroundSize: `36px 36px`
@@ -419,103 +443,102 @@ export default function Page() {
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center relative z-10">
           <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
-            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/90 border border-blue-200/90 text-blue-700 text-xs font-black tracking-wide shadow-md backdrop-blur-md hover:border-blue-400 transition-all hover:scale-105 duration-300">
-              <span className="relative flex h-2.5 w-2.5">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-blue-200/90 text-blue-700 text-xs font-black tracking-wide shadow-sm">
+              <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
               </span>
-              <Sparkles className="w-4 h-4 text-amber-500 fill-amber-500 animate-spin" style={{ animationDuration: "6s" }} />
-              <span>{content['home.hero-section.text.enterprise-managed-services-talent-solutions'] ?? 'Enterprise Managed Services & Talent Solutions'}</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+              <span>{translate(content['home.hero-section.text.enterprise-managed-services-talent-solutions'] ?? 'Enterprise Managed Services & Talent Solutions')}</span>
             </div>
 
-            <div className="min-h-[90px] sm:min-h-[110px] flex flex-col justify-start">
+            <div className="min-h-[84px] sm:min-h-[104px] flex flex-col justify-start">
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
                 <span
                   className={`block text-slate-900 transition-all duration-500 transform ${
-                    isAnimating ? "opacity-0 -translate-y-4 scale-95" : "opacity-100 translate-y-0 scale-100"
+                    isAnimating ? "opacity-0 -translate-y-3 scale-95" : "opacity-100 translate-y-0 scale-100"
                   }`}
                 >
-                  {ANIMATED_TITLES[titleIndex]}
+                  {translate(ANIMATED_TITLES[titleIndex])}
                 </span>
                 <span className="block mt-1 bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent font-black">
-                  {content['home.hero-section.text.for-your-business-growth'] ?? 'for Your Business Growth\r'}</span>
+                  {translate(content['home.hero-section.text.for-your-business-growth'] ?? 'for Your Business Growth')}
+                </span>
               </h1>
             </div>
 
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl font-normal mx-auto lg:mx-0">
-              {content['home.hero-section.text.prima-services-membantu-enterprise-dan-bisnis-be'] ?? 'Prima Services membantu enterprise dan bisnis berkembang di Indonesia mengakselerasi operasional dengan solusi terintegrasi, aman, dan berstandar global.\r'}</p>
+              {translate(content['home.hero-section.text.prima-services-membantu-enterprise-dan-bisnis-be'] ?? 'Prima Services membantu Indonesian enterprises and businesses accelerate operations with integrated, secure, and globally standardized solutions.')}
+            </p>
 
-            <div className="pt-1 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <div className="pt-1 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
               <Link
                 href={content['home.hero-section.href.contact'] ?? '/contact'}
-                className="relative group overflow-hidden w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 text-white font-extrabold text-sm px-8 py-3.5 rounded-full transition-all duration-300 shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-1 cursor-pointer"
+                className="relative group overflow-hidden w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 text-white font-extrabold text-sm px-7 py-3 rounded-full transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
               >
-                <div className="absolute inset-0 w-1/2 h-full bg-white/25 skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out" />
-                <span className="relative z-10">{content['home.hero-section.text.get-free-consultation'] ?? 'Get Free Consultation'}</span>
-                <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1.5 transition-transform" />
+                <span className="relative z-10">{translate(content['home.hero-section.text.get-free-consultation'] ?? 'Get Free Consultation')}</span>
+                <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
               </Link>
 
-              <div className="flex items-center gap-3 pt-2 sm:pt-0">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200/90 text-xs font-bold text-slate-700 shadow-xs hover:shadow-md transition-shadow">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 animate-pulse" />
-                  <span>{content['home.hero-section.text.iso-certified'] ?? 'ISO Certified'}</span>
+              <div className="flex items-center gap-2.5">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white border border-slate-200/90 text-xs font-bold text-slate-700 shadow-xs">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>{translate(content['home.hero-section.text.iso-certified'] ?? 'ISO Certified')}</span>
                 </div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200/90 text-xs font-bold text-slate-700 shadow-xs hover:shadow-md transition-shadow">
-                  <Clock className="w-4 h-4 text-blue-600 animate-pulse" />
-                  <span>{content['home.hero-section.text.24-7-sla'] ?? '24/7 SLA'}</span>
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white border border-slate-200/90 text-xs font-bold text-slate-700 shadow-xs">
+                  <Clock className="w-4 h-4 text-blue-600" />
+                  <span>{translate(content['home.hero-section.text.24-7-sla'] ?? '24/7 SLA')}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-5 flex justify-center relative">
-            <div className="relative w-full max-w-[520px] aspect-[4/3]">
-              <div className="absolute -inset-3 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 rounded-3xl blur-2xl opacity-30 animate-pulse" />
-
-              <div className="relative w-full h-full p-3.5 bg-white/90 backdrop-blur-2xl border border-white/80 rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden group">
+            <div className="relative w-full max-w-[480px] aspect-[4/3]">
+              <div className="relative w-full h-full p-3 bg-white/90 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-xl flex items-center justify-center overflow-hidden group">
                 <Image
                   key={heroSlideIndex}
                   src={HERO_SLIDES[heroSlideIndex].src}
-                  alt={HERO_SLIDES[heroSlideIndex].alt}
+                  alt={translate(HERO_SLIDES[heroSlideIndex].alt)}
                   fill
                   quality={100}
                   unoptimized
-                  sizes="(max-width: 768px) 100vw, 520px"
-                  className="object-contain p-2 rounded-2xl transition-all duration-700 ease-in-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 480px"
+                  className="object-contain p-2 rounded-2xl transition-all duration-700 ease-in-out"
                   priority
                 />
               </div>
 
-              <div className="absolute -top-6 -left-6 bg-white/90 backdrop-blur-xl border border-slate-200/90 p-4 rounded-2xl shadow-xl hidden sm:flex items-center gap-3 animate-float">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-400 flex items-center justify-center text-white shadow-md">
-                  <TrendingUp className="w-5 h-5" />
+              <div className="absolute -top-4 -left-4 bg-white/95 backdrop-blur-md border border-slate-200/90 p-3 rounded-2xl shadow-lg hidden sm:flex items-center gap-2.5 animate-float">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-400 flex items-center justify-center text-white">
+                  <TrendingUp className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">{content['home.hero-section.text.efficiency'] ?? 'Efficiency'}</p>
-                  <p className="text-xs font-black text-slate-900">{content['home.hero-section.text.45-growth'] ?? '+45% Growth'}</p>
+                  <p className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider">{translate(content['home.hero-section.text.efficiency'] ?? 'Efficiency')}</p>
+                  <p className="text-xs font-black text-slate-900">{translate(content['home.hero-section.text.45-growth'] ?? '+45% Growth')}</p>
                 </div>
               </div>
 
-              <div className="absolute -bottom-6 -right-6 bg-white/90 backdrop-blur-xl border border-slate-200/90 p-4 rounded-2xl shadow-xl hidden sm:flex items-center gap-3 animate-float-delayed">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md">
-                  <Activity className="w-5 h-5" />
+              <div className="absolute -bottom-4 -right-4 bg-white/95 backdrop-blur-md border border-slate-200/90 p-3 rounded-2xl shadow-lg hidden sm:flex items-center gap-2.5 animate-float-delayed">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white">
+                  <Activity className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">{content['home.hero-section.text.status'] ?? 'Status'}</p>
-                  <p className="text-xs font-black text-slate-900">{content['home.hero-section.text.24-7-active-sla'] ?? '24/7 Active SLA'}</p>
+                  <p className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider">{translate(content['home.hero-section.text.status'] ?? 'Status')}</p>
+                  <p className="text-xs font-black text-slate-900">{translate(content['home.hero-section.text.24-7-active-sla'] ?? '24/7 Active SLA')}</p>
                 </div>
               </div>
 
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 bg-white/90 backdrop-blur-md border border-slate-200/90 px-4 py-1.5 rounded-full shadow-md">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-white/90 backdrop-blur-md border border-slate-200/90 px-3 py-1 rounded-full shadow-sm">
                 {HERO_SLIDES.map((_, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setHeroSlideIndex(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                      heroSlideIndex === idx ? "w-8 bg-blue-600" : "w-2 bg-slate-300 hover:bg-slate-400"
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      heroSlideIndex === idx ? "w-6 bg-blue-600" : "w-1.5 bg-slate-300 hover:bg-slate-400"
                     }`}
-                    aria-label={`Go to slide ${idx + 1}`}
+                    aria-label={`${translate("Go to slide")} ${idx + 1}`}
                   />
                 ))}
               </div>
@@ -524,776 +547,610 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ================= OUR SERVICES SECTION ================= */}
-      <section className="pt-6 pb-8 lg:pt-8 lg:pb-10 px-6 relative bg-white">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="text-center max-w-3xl mx-auto space-y-1.5">
-            <span className="inline-block px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/90 text-blue-700 text-xs font-black tracking-widest uppercase shadow-xs">
-              {content['home.our-services-section.text.what-we-offer'] ?? 'What We Offer\r'}</span>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              {content['home.our-services-section.text.our-services'] ?? 'OUR SERVICES\r'}</h2>
-            <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto">
-              {content['home.our-services-section.text.solusi-operasional-terpadu-dan-manajemen-talenta'] ?? 'Solusi operasional terpadu dan manajemen talenta yang dirancang untuk mempercepat skala bisnis Anda.\r'}</p>
-          </div>
+      {/* ================= 2. DELIVERY & SCALING FRAMEWORK (RIGHT AFTER HERO) ================= */}
+      <section id="scale-deliver" className="bg-gradient-to-b from-slate-50/60 to-white py-10 px-6 border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-1">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-blue-50 border border-blue-200/90 text-blue-600 text-[11px] font-extrabold tracking-wider uppercase">
+                <Layers className="w-3.5 h-3.5 text-blue-600" />
+                <span>{translate("Execution & Delivery")}</span>
+              </span>
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">
+                {translate("How We Scale & Deliver")}
+              </h2>
+              <p className="text-slate-500 text-xs sm:text-sm max-w-xl">
+                {translate(content['home.how-we-scale-section.text.merancang-menjalankan-dan-mengoptimalkan-operasi'] ?? 'Structured workflows for managing remote and on-site teams, with regular reporting.')}
+              </p>
+            </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="group relative bg-gradient-to-br from-slate-50/90 via-white to-blue-50/40 rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xl hover:shadow-2xl hover:border-blue-300 transition-all duration-500 overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 rounded-t-3xl" />
-
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-blue-200/90 flex items-center justify-center text-blue-600 shadow-md shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                    <MainIcon className="w-7 h-7 stroke-[1.8]" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-black tracking-widest text-blue-600 uppercase bg-blue-100/80 px-2.5 py-0.5 rounded-md border border-blue-200 inline-block mb-1">
-                      {content['home.our-services-section.text.core-offering'] ?? 'Core Offering\r'}</span>
-                    <h3 className="font-extrabold text-slate-900 text-2xl md:text-3xl leading-snug">
-                      {BPO_MAIN_SERVICE.title}
-                    </h3>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsBpoOpen(!isBpoOpen)}
-                  className="p-3 rounded-2xl bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-300 transition-all focus:outline-none cursor-pointer shadow-sm hover:scale-105"
-                  aria-label={content['home.our-services-section.aria-label.toggle-details'] ?? 'Toggle Details'}
-                >
-                  <ChevronDown
-                    className={`w-6 h-6 transform transition-transform duration-300 ${
-                      isBpoOpen ? "rotate-180 text-blue-600" : "rotate-0"
-                    }`}
-                  />
-                </button>
-              </div>
-
-              {isBpoOpen && (
-                <div className="pt-6 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-500 fill-amber-500 animate-pulse" />
-                      <span>{content['home.our-services-section.text.overview-capabilities'] ?? 'OVERVIEW & CAPABILITIES'}</span>
-                    </p>
-
-                    <div className="p-5 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-xs">
-                      <p className="text-sm md:text-base text-slate-600 leading-relaxed font-normal">
-                        {BPO_MAIN_SERVICE.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-200/80 space-y-4">
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-400">
-                      {content['home.our-services-section.text.our-bpo-solutions-services'] ?? 'OUR BPO SOLUTIONS & SERVICES:\r'}</p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {BPO_SUB_SERVICES.map((sub, sIdx) => (
-                        <Link
-                          key={sIdx}
-                          href={`/services/details/${sub.slug}`}
-                          aria-label={`Pelajari lebih lanjut: ${sub.title}`}
-                          className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-xs hover:shadow-2xl hover:border-blue-300 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group/card"
-                        >
-                          <div>
-                            <div className="relative w-full h-40 bg-slate-100 overflow-hidden" >
-                              <Image
-                                src={sub.imageSrc}
-                                alt={sub.title}
-                                fill
-                                unoptimized
-                                className="object-cover group-hover/card:scale-110 transition-transform duration-700"
-                              />
-                            </div>
-
-                            <div className="p-5 border-b border-slate-100" >
-                              <h4 className="font-extrabold text-slate-900 text-base leading-snug group-hover/card:text-blue-600 transition-colors mb-1.5" >
-                                {sub.title}
-                              </h4>
-                              <p className="text-xs text-slate-500 leading-relaxed" >
-                                {sub.description}
-                              </p>
-                            </div>
-
-                            <div className="p-5 bg-slate-50/50" >
-                              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2" >
-                                {content['home.our-services-section.text.key-offerings'] ?? 'Key Offerings:\r'}</p>
-                              <ul className="space-y-2" >
-                                {sub.points.map((pt, ptIdx) => (
-                                  <li key={ptIdx} className="flex items-start gap-2 text-xs font-medium text-slate-700" >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 shrink-0"  />
-                                    <span className="leading-snug" >{pt}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
+            <div className="inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200/80 self-start">
               <button
                 type="button"
-                onClick={() => setIsBpoOpen(!isBpoOpen)}
-                className="mt-4 pt-3 border-t border-slate-200/80 w-full flex items-center justify-center gap-2 text-xs font-extrabold tracking-wider uppercase text-blue-600 hover:text-blue-700 transition-colors focus:outline-none cursor-pointer"
+                onClick={() => setScaleTab('scale')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                  scaleTab === 'scale'
+                    ? 'bg-white text-blue-600 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
               >
-                <span>{isBpoOpen ? content['home.our-services-section.text.show-less'] ?? 'Show Less' : content['home.our-services-section.text.explore-capabilities'] ?? 'Explore Capabilities'}</span>
-                <ChevronDown
-                  className={`w-4 h-4 transform transition-transform duration-300 ${
-                    isBpoOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                />
+                {translate("How We Scale")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setScaleTab('deliver')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                  scaleTab === 'deliver'
+                    ? 'bg-white text-blue-600 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {translate("Delivery Flow")}
               </button>
             </div>
           </div>
+
+          {scaleTab === 'scale' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in duration-300">
+              {SCALE_CARDS.map((card) => (
+                <Link
+                  key={card.id}
+                  href={`/services/details/${card.slug}`}
+                  scroll={false}
+                  onClick={handleCardClick}
+                  aria-label={`${translate("Learn more:")} ${translate(card.title)}`}
+                  className="bg-white border border-slate-200/90 hover:border-blue-400 rounded-2xl p-4 transition-all hover:shadow-lg flex flex-col justify-between group cursor-pointer"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2.5">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/80">
+                        {translate(card.badge)}
+                      </span>
+                      <span className="text-base font-black text-slate-300 group-hover:text-blue-600">
+                        {card.step}
+                      </span>
+                    </div>
+                    <div className="relative w-full h-24 mb-3 rounded-xl bg-slate-50 border border-slate-100 p-2 flex items-center justify-center">
+                      <Image
+                        src={card.imageSrc}
+                        alt={translate(card.alt)}
+                        fill
+                        unoptimized
+                        className="object-contain p-1.5 group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                  </div>
+                  <div className="text-center pt-2 border-t border-slate-100">
+                    <h3 className="text-xs sm:text-sm font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+                      {translate(card.title)}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {scaleTab === 'deliver' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in duration-300">
+              {DELIVER_STEPS.map((card, idx) => (
+                <Link
+                  key={idx}
+                  href={`/services/details/${card.slug}`}
+                  scroll={false}
+                  onClick={handleCardClick}
+                  aria-label={`${translate("Learn more:")} ${translate(card.title)}`}
+                  className="bg-white border border-slate-200/90 hover:border-blue-300 rounded-2xl p-4 transition-all hover:shadow-lg flex flex-col justify-between group cursor-pointer"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 p-1.5 flex items-center justify-center">
+                      <Image
+                        src={card.imageSrc}
+                        alt={translate(card.alt)}
+                        width={32}
+                        height={32}
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                    <span className="text-lg font-black text-slate-300 group-hover:text-blue-600">
+                      {card.step}
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+                    {translate(card.title)}
+                  </h3>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ================= BPO CAPABILITIES SECTION ================= */}
-      <section className="bg-gradient-to-b from-white via-slate-50/80 to-white pt-6 pb-12 lg:pt-8 lg:pb-14 px-6 border-y border-slate-200/80 relative">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="text-center max-w-2xl mx-auto space-y-1.5">
-            <span className="inline-block px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-700 text-xs font-extrabold uppercase tracking-wider shadow-xs">
-              {content['home.bpo-capabilities-section.text.operational-excellence'] ?? 'Operational Excellence\r'}</span>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              {content['home.bpo-capabilities-section.text.business-process-outsourcing-bpo'] ?? 'Business Process Outsourcing (BPO)\r'}</h2>
-            <p className="text-slate-500 text-sm md:text-base">
-              {content['home.bpo-capabilities-section.text.teknologi-dan-infrastruktur-operasional-terdedik'] ?? 'Teknologi dan infrastruktur operasional terdedikasi untuk skalabilitas bisnis.\r'}</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {BPO_CARDS.map((card, idx) => (
-              <Link
-                key={idx}
-                href={`/services/details/${card.slug}`}
-                aria-label={`Pelajari lebih lanjut: ${card.title.replace(/\n/g, " ")}`}
-                className="bg-white rounded-3xl p-6 text-center border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-blue-400 hover:-translate-y-2 transition-all duration-500 group flex flex-col items-center relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full pointer-events-none group-hover:scale-125 transition-transform duration-500" />
-
-                <div className="relative w-20 h-20 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                  <Image
-                    src={card.imageSrc}
-                    alt={card.alt}
-                    width={80}
-                    height={80}
-                    quality={100}
-                    unoptimized
-                    className="object-contain"
-                  />
-                </div>
-
-                <h3 className="font-extrabold text-slate-900 text-base mb-1.5 whitespace-pre-line group-hover:text-blue-600 transition-colors leading-snug">
-                  {card.title}
-                </h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                  {card.desc}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= HOW WE CONTROL & ENABLE SECTION ================= */}
-      <section className="bg-white py-12 lg:py-14 px-6 border-b border-slate-200/80 relative">
-        <div className="max-w-6xl mx-auto space-y-12">
-
-          <div className="space-y-6">
-            <div className="text-center max-w-2xl mx-auto space-y-2">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200/90 text-amber-700 text-xs font-extrabold tracking-wider uppercase shadow-xs">
-                <Shield className="w-3.5 h-3.5 text-amber-600 animate-bounce" />
-                <span>{content['home.how-we-control-enable-section.text.governance-quality-assurance'] ?? 'Governance & Quality Assurance'}</span>
+      {/* ================= 3. GOVERNANCE & TECH STACK (COMPACT TABBED) ================= */}
+      <section id="control-enable" className="bg-white py-10 px-6 border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-50 border border-amber-200/90 text-amber-700 text-[11px] font-extrabold tracking-wider uppercase">
+                <Shield className="w-3.5 h-3.5 text-amber-600" />
+                <span>{translate(content['home.how-we-control-enable-section.text.governance-quality-assurance'] ?? 'Governance & Quality Assurance')}</span>
               </div>
-
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                {content['home.how-we-control-enable-section.text.how-we-control'] ?? 'How We Control '}<span className="bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent font-extrabold text-2xl md:text-3xl block sm:inline">{content['home.how-we-control-enable-section.text.playbooks-governance'] ?? '(Playbooks & Governance)'}</span>
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">
+                {translate("How We Control & Enable")}
               </h2>
-
-              <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-                {content['home.how-we-control-enable-section.text.kami-menyediakan-standar-operasional-fleksibel-b'] ?? 'Kami menyediakan standar operasional fleksibel berbasis SLA, QA terukur, dan pemantauan berkala.\r'}</p>
+              <p className="text-slate-500 text-xs sm:text-sm max-w-xl">
+                {governanceTab === 'enable'
+                  ? translate('A unified set of collaboration, engagement, intelligence and business platforms.')
+                  : translate(content['home.how-we-control-enable-section.text.kami-menyediakan-standar-operasional-fleksibel-b'] ?? 'We provide flexible operational standards based on SLAs, measurable QA, and regular monitoring.')}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200/80 self-start">
+              <button
+                type="button"
+                onClick={() => setGovernanceTab('control')}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                  governanceTab === 'control'
+                    ? 'bg-white text-blue-600 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {translate("Playbooks & Governance")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setGovernanceTab('enable')}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer ${
+                  governanceTab === 'enable'
+                    ? 'bg-white text-blue-600 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {translate("Tools & Integrations")}
+              </button>
+            </div>
+          </div>
+
+          {governanceTab === 'control' ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-in fade-in duration-300">
               {CONTROL_ITEMS.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
                   <Link
                     key={index}
                     href={`/services/details/${item.slug}`}
-                    aria-label={`Pelajari lebih lanjut: ${item.title}`}
-                    className="group relative bg-slate-50/70 border border-slate-200/90 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white hover:shadow-2xl hover:border-blue-300 flex flex-col justify-between overflow-hidden shadow-xs"
+                    scroll={false}
+                    onClick={handleCardClick}
+                    aria-label={`${translate("Learn more:")} ${translate(item.title)}`}
+                    className="group relative bg-slate-50/70 border border-slate-200/90 rounded-2xl p-5 transition-all hover:bg-white hover:shadow-lg hover:border-blue-300 flex flex-col justify-between overflow-hidden cursor-pointer"
                   >
-                    <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${item.accentColor} opacity-90 group-hover:opacity-100 transition-opacity`} />
-
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className={`w-12 h-12 rounded-2xl ${item.badgeBg} flex items-center justify-center border shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
-                          <IconComponent className="w-6 h-6 stroke-[1.8]" />
-                        </div>
-                        <span className="text-xs font-black text-slate-300 group-hover:text-blue-600 transition-colors">
-                          {content['home.how-we-control-enable-section.text.0'] ?? '0'}{index + 1}
-                        </span>
+                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.accentColor}`} />
+                    <div className="flex items-center justify-between mb-3">
+                      <div className={`w-10 h-10 rounded-xl ${item.badgeBg} flex items-center justify-center border`}>
+                        <IconComponent className="w-5 h-5 stroke-[1.8]" />
                       </div>
-
-                      <h3 className="text-base font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                        {item.title}
-                      </h3>
-
-                      <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal">
-                        {item.description}
-                      </p>
+                      <span className="text-xs font-black text-slate-300 group-hover:text-blue-600">
+                        0{index + 1}
+                      </span>
                     </div>
-
-                    <div className="mt-6 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs font-extrabold text-slate-400 group-hover:text-blue-600 transition-colors">
-                      <span>{content['home.how-we-control-enable-section.text.standards-verified'] ?? 'Standards Verified'}</span>
-                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                    <h3 className="text-base font-black text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {translate(item.title)}
+                    </h3>
+                    <div className="mt-4 pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] font-extrabold text-slate-400 group-hover:text-blue-600">
+                      <span>{translate(content['home.how-we-control-enable-section.text.standards-verified'] ?? 'Standards Verified')}</span>
+                      <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </Link>
                 );
               })}
             </div>
-          </div>
-
-          <div className="space-y-6 pt-2">
-            <div className="text-center md:text-left space-y-1">
-              <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-blue-700 bg-blue-50 px-3.5 py-1 rounded-full border border-blue-200/90 shadow-xs">
-                <Cpu className="w-4 h-4 text-blue-600 animate-spin" style={{ animationDuration: "10s" }} />
-                <span>{content['home.how-we-control-enable-section.text.integrated-tech-stack'] ?? 'Integrated Tech Stack'}</span>
-              </div>
-              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                {content['home.how-we-control-enable-section.text.how-we-enable'] ?? 'How We Enable '}<span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-bold text-lg md:text-2xl block sm:inline">{content['home.how-we-control-enable-section.text.tools-integrations'] ?? '(Tools & Integrations)'}</span>
-              </h2>
+          ) : (
+            <div className="space-y-2.5 animate-in fade-in duration-300">
+              {INTEGRATIONS.map((row) => {
+                const FallbackIcon = row.fallbackIcon;
+                return (
+                  <button
+                    key={row.slug}
+                    type="button"
+                    onClick={() => setSelectedPlatform(row)}
+                    aria-label={`${translate("View platform details:")} ${translate(row.title)}`}
+                    className="w-full text-left group relative bg-slate-50/70 hover:bg-white rounded-2xl p-3.5 md:px-5 flex flex-col md:flex-row items-center justify-between gap-3 border border-slate-200/90 hover:shadow-md hover:border-blue-300 transition-all overflow-hidden cursor-pointer"
+                  >
+                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${row.accent}`} />
+                    <div className="flex items-center gap-3.5 w-full md:w-auto">
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center shrink-0 p-1.5">
+                        {!failedLogos[row.slug] ? (
+                          <Image
+                            src={row.logoSrc}
+                            alt={translate(row.title)}
+                            width={32}
+                            height={32}
+                            quality={100}
+                            unoptimized
+                            className="object-contain"
+                            onError={() =>
+                              setFailedLogos((prev) => ({ ...prev, [row.slug]: true }))
+                            }
+                          />
+                        ) : (
+                          <FallbackIcon className="w-5 h-5 text-indigo-600" />
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors">
+                          {translate(row.title)}
+                        </h4>
+                        <p className="text-xs text-slate-500">{translate(row.sub)}</p>
+                      </div>
+                    </div>
+                    <div className="w-full md:w-auto shrink-0 flex items-center justify-between md:justify-end gap-2">
+                      <div className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200/80 px-3.5 py-1.5 rounded-full text-xs font-bold text-blue-700 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500 group-hover:text-amber-300" />
+                        <span>{translate(row.desc)}</span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all shrink-0" />
+                    </div>
+                  </button>
+                );
+              })}
             </div>
+          )}
+        </div>
+      </section>
 
-            <div className="space-y-3">
-              {INTEGRATIONS.map((row, idx) => (
-                <div
-                  key={idx}
-                  className="group relative bg-slate-50/60 hover:bg-white rounded-2xl p-4 md:px-6 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-200/90 shadow-xs hover:shadow-xl hover:border-blue-300 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+      {/* ================= MODAL DETAIL PLATFORM ================= */}
+      {selectedPlatform && (() => {
+        const SelectedFallbackIcon = selectedPlatform.fallbackIcon;
+        return (
+          <div
+            className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200"
+            onClick={() => setSelectedPlatform(null)}
+          >
+            <div
+              className="relative w-full max-w-2xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden my-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={`h-2 w-full ${selectedPlatform.accent}`} />
+
+              <div className="p-6 sm:p-8 border-b border-slate-100 flex items-start justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200/90 flex items-center justify-center p-2.5 shrink-0">
+                    {!failedLogos[selectedPlatform.slug] ? (
+                      <Image
+                        src={selectedPlatform.logoSrc}
+                        alt={translate(selectedPlatform.name)}
+                        width={44}
+                        height={44}
+                        unoptimized
+                        className="object-contain"
+                        onError={() =>
+                          setFailedLogos((prev) => ({
+                            ...prev,
+                            [selectedPlatform.slug]: true,
+                          }))
+                        }
+                      />
+                    ) : (
+                      <SelectedFallbackIcon className="w-7 h-7 text-indigo-600" />
+                    )}
+                  </div>
+                  <div>
+                    <span
+                      className={`inline-block px-3 py-0.5 rounded-full border text-[11px] font-extrabold uppercase tracking-wider ${selectedPlatform.badgeBg}`}
+                    >
+                      {translate(selectedPlatform.subtitle)}
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                      {translate(selectedPlatform.name)}
+                    </h3>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlatform(null)}
+                  aria-label={translate("Close details")}
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer shrink-0"
                 >
-                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${row.accent} opacity-80 group-hover:opacity-100 transition-opacity`} />
-
-                  <div className="flex items-center gap-4 w-full md:w-auto">
-                    <div className="w-12 h-12 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center shrink-0 p-2 shadow-sm group-hover:scale-110 transition-transform">
-                      <Image
-                        src={row.logoSrc}
-                        alt={row.title}
-                        width={36}
-                        height={36}
-                        quality={100}
-                        unoptimized
-                        className="object-contain"
-                      />
-                    </div>
-
-                    <div>
-                      <h4 className="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
-                        {row.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                        {row.sub}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="w-full md:w-auto shrink-0">
-                    <div className="inline-flex items-center justify-center gap-2 bg-blue-50 border border-blue-200/80 px-4 py-2 rounded-full text-xs font-bold text-blue-700 shadow-xs group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500 group-hover:text-amber-300" />
-                      <span>{row.desc}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ================= RECRUITMENT & RPO SECTION ================= */}
-      <section className="bg-gradient-to-b from-white via-slate-50/70 to-white py-12 lg:py-14 px-6 border-b border-slate-200/80 relative">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/90 text-blue-600 text-xs font-extrabold tracking-wider uppercase">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>{content['home.recruitment-rpo-section.text.end-to-end-talent-acquisition'] ?? 'End-to-End Talent Acquisition'}</span>
-              </span>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                {content['home.recruitment-rpo-section.text.how-we-recruit'] ?? 'How We Recruit '}<span className="text-blue-600 font-bold text-xl md:text-2xl block sm:inline">{content['home.recruitment-rpo-section.text.rpo-process'] ?? '(RPO Process)'}</span>
-              </h2>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 px-4 py-2 rounded-2xl shadow-xs shrink-0">
-              <div className="relative w-24 h-6">
-                <Image
-                  src={content['recruitment-rpo-section.logo.src'] ?? "/images/logo.png"}
-                  alt={content['home.recruitment-rpo-section.alt.prima-services-logo'] ?? 'Prima Services Logo'}
-                  fill
-                  quality={100}
-                  unoptimized
-                  className="object-contain"
-                />
+                  <X className="w-5 h-5" />
+                </button>
               </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {BPO_SUB_SERVICES.map((card, idx) => (
-              <Link
-                key={idx}
-                href={`/services/details/${card.slug}`}
-                aria-label={`Pelajari lebih lanjut: ${card.title}`}
-                className="group relative bg-white text-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200/90 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-300 flex flex-col justify-between overflow-hidden"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black tracking-wider uppercase px-3 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200/90">
-                      {content['home.recruitment-rpo-section.text.service-0'] ?? 'SERVICE 0'}{idx + 1}
-                    </span>
-                    <span className="text-2xl font-black text-slate-200 group-hover:text-blue-600 transition-colors">
-                      {content['home.recruitment-rpo-section.text.0'] ?? '0'}{idx + 1}
-                    </span>
-                  </div>
+              <div className="p-6 sm:p-8 space-y-6">
+                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+                  {translate(selectedPlatform.fullDescription)}
+                </p>
 
-                  <div className="relative w-full h-40 mb-4 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80 shadow-inner group/img">
-                    <Image
-                      src={card.imageSrc}
-                      alt={card.title}
-                      fill
-                      quality={100}
-                      unoptimized
-                      className="object-cover transition-transform duration-700 group-hover/img:scale-110"
-                    />
-                  </div>
-
-                  <h3 className="text-base font-black text-slate-900 mb-1 group-hover:text-blue-600 transition-colors leading-snug">
-                    {card.title}
-                  </h3>
-
-                  <p className="text-xs text-slate-500 leading-relaxed font-normal mb-4">
-                    {card.description}
+                <div className="space-y-3">
+                  <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                    {translate("Key Capabilities & Solutions")}
                   </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedPlatform.features.map((feat, fIdx) => {
+                      const FeatIcon = feat.icon;
+                      return (
+                        <div
+                          key={fIdx}
+                          className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80"
+                        >
+                          <div
+                            className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${selectedPlatform.iconBg}`}
+                          >
+                            <FeatIcon className="w-4 h-4" />
+                          </div>
+                          <span className="text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+                            {translate(feat.label)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
+              </div>
 
-                <div className="pt-4 border-t border-slate-100 bg-slate-50/60 group-hover:bg-blue-50/30 -mx-6 -mb-6 p-6 transition-colors">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">{content['home.recruitment-rpo-section.text.key-deliverables'] ?? 'Key Deliverables:'}</p>
-                  <ul className="space-y-2 text-xs text-slate-700 font-medium">
-                    {card.points.map((pt, pIdx) => (
-                      <li key={pIdx} className="flex items-start gap-2" >
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 shrink-0"  />
-                        <span className="leading-snug" >{pt}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= HOW WE SCALE SECTION ================= */}
-      <section className="bg-white py-12 lg:py-14 px-6 border-b border-slate-200/80 relative">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-1 max-w-2xl">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/90 text-blue-600 text-xs font-extrabold tracking-wider uppercase">
-                <Layers className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
-                <span>{content['home.how-we-scale-section.text.scalable-operation-framework'] ?? 'Scalable Operation Framework'}</span>
-              </span>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                {content['home.how-we-scale-section.text.how-we-scale'] ?? 'How We Scale '}<span className="text-blue-600 font-bold text-xl md:text-2xl block sm:inline">{content['home.how-we-scale-section.text.outsourcing-services'] ?? '(Outsourcing Services)'}</span>
-              </h2>
-              <p className="text-slate-500 text-xs md:text-sm font-normal pt-0.5">
-                {content['home.how-we-scale-section.text.merancang-menjalankan-dan-mengoptimalkan-operasi'] ?? 'Merancang, menjalankan, dan mengoptimalkan operasional bisnis Anda secara fleksibel baik on-site maupun remote.\r'}</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200/90 px-4 py-2 rounded-2xl shadow-xs shrink-0">
-              <div className="relative w-24 h-6">
-                <Image
-                  src={content['how-we-scale-section.logo.src'] ?? "/images/logo.png"}
-                  alt={content['home.how-we-scale-section.alt.prima-services-logo'] ?? 'Prima Services Logo'}
-                  fill
-                  quality={100}
-                  unoptimized
-                  className="object-contain"
-                />
+              <div className="px-6 sm:px-8 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlatform(null)}
+                  className="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  {translate("Close")}
+                </button>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-2.5 rounded-full transition-all shadow-md"
+                >
+                  <span>{translate("Consult about")} {translate(selectedPlatform.name)}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>
+        );
+      })()}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {SCALE_CARDS.map((card) => (
-              <div
-                key={card.id}
-                className="bg-slate-50/70 hover:bg-white border border-slate-200/90 hover:border-blue-300 rounded-3xl p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between group shadow-xs relative"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 bg-blue-100/80 px-2 py-0.5 rounded-md border border-blue-200">
-                      {card.badge}
-                    </span>
-                    <span className="text-lg font-black text-slate-300 group-hover:text-blue-600 transition-colors">
-                      {card.step}
-                    </span>
-                  </div>
-
-                  <div className="relative w-full h-32 mb-4 rounded-2xl bg-white border border-slate-200/80 p-3 flex items-center justify-center group-hover:bg-blue-50/40 transition-colors">
-                    <Image
-                      src={card.imageSrc}
-                      alt={card.alt}
-                      fill
-                      unoptimized
-                      className="object-contain p-2 group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="text-center pt-2 border-t border-slate-200/80">
-                  <h3 className="text-xs sm:text-sm font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
-                    {card.title}
-                  </h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= HOW WE DELIVER SECTION ================= */}
-      <section className="bg-gradient-to-b from-white via-slate-50/50 to-white py-12 lg:py-14 px-6 border-b border-slate-200/80 relative">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center max-w-2xl mx-auto space-y-1.5">
-            <span className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200/90 text-blue-600 text-xs font-black tracking-wider uppercase">
-              {content['home.how-we-deliver-section.text.step-by-step-execution'] ?? 'Step-by-Step Execution\r'}</span>
-            <h2 className="text-2xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              {content['home.how-we-deliver-section.text.how-we-deliver'] ?? 'How We Deliver '}<span className="text-blue-600 font-normal text-lg md:text-2xl block md:inline">{content['home.how-we-deliver-section.text.outsourcing-flow'] ?? '(Outsourcing Flow)'}</span>
-            </h2>
-            <p className="text-slate-500 text-xs md:text-sm">
-              {content['home.how-we-deliver-section.text.proses-alur-kerja-yang-terstruktur-dan-terukur-u'] ?? 'Proses alur kerja yang terstruktur dan terukur untuk memastikan efisiensi optimal.\r'}</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {DELIVER_STEPS.map((card, idx) => (
-              <div
-                key={idx}
-                className="bg-white border border-slate-200/90 hover:border-blue-300 rounded-3xl p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between group shadow-xs"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50/80 border border-blue-100 p-2 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 group-hover:rotate-6 transition-all">
-                      <Image
-                        src={card.imageSrc}
-                        alt={card.alt}
-                        width={40}
-                        height={40}
-                        className="object-contain"
-                        unoptimized
-                      />
-                    </div>
-                    <span className="text-xl font-black text-slate-300 group-hover:text-blue-600 transition-colors">
-                      {card.step}
-                    </span>
-                  </div>
-
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-1.5">
-                    {card.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                    {card.desc}
-                  </p>
-                </div>
-
-                <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-end text-[11px] text-blue-600 font-extrabold">
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= GLOBAL RELATIONS SECTION ================= */}
-      <section className="bg-gradient-to-b from-white via-slate-50/50 to-white py-12 lg:py-14 px-6 border-b border-slate-200/80 relative overflow-hidden">
+      {/* ================= 4. GLOBAL RELATIONS & EXPANSION (UNIFIED COMPACT) ================= */}
+      <section className="bg-white py-10 px-6 border-b border-slate-200/80">
         <div className="max-w-6xl mx-auto space-y-8">
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-
-            <div className="lg:col-span-6 space-y-4">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-bold tracking-wide shadow-xs">
-                  <Globe2 className="w-4 h-4 text-blue-600 animate-spin" style={{ animationDuration: "12s" }} />
-                  <span>{content['home.global-relations-section.text.global-relations-expansion'] ?? 'GLOBAL RELATIONS & EXPANSION'}</span>
-                </div>
-
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                  {content['home.global-relations-section.text.international'] ?? 'International '}<br className="hidden sm:inline" />
-                  <span className="bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent">
-                    {content['home.global-relations-section.text.partnerships-expansion'] ?? 'Partnerships & Expansion\r'}</span>
-                </h2>
-
-                <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-lg">
-                  {content['home.global-relations-section.text.akselerasi-jangkauan-bisnis-anda-ke-pasar-global'] ?? 'Akselerasi jangkauan bisnis Anda ke pasar global dengan dukungan konsultasi regulasi, pemetaan jaringan lokal, dan kemitraan strategis.\r'}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div className="lg:col-span-6 space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-[11px] font-bold tracking-wide">
+                <Globe2 className="w-3.5 h-3.5 text-blue-600" />
+                <span>{translate(content['home.global-relations-section.text.global-relations-expansion'] ?? 'GLOBAL RELATIONS & EXPANSION')}</span>
               </div>
 
-              <div className="space-y-2.5 pt-1">
+              <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                {translate(content['home.global-relations-section.text.international'] ?? 'International ')}
+                <span className="bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent">
+                  {translate(content['home.global-relations-section.text.partnerships-expansion'] ?? 'Partnerships & Expansion')}
+                </span>
+              </h2>
+
+              <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                {translate(content['home.global-relations-section.text.akselerasi-jangkauan-bisnis-anda-ke-pasar-global'] ?? 'Accelerate your business reach into global markets with regulatory consulting, local network mapping, and strategic partnerships.')}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                 {GLOBAL_POINTS.map((point, idx) => (
                   <div
                     key={idx}
-                    className="group relative p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-blue-300 transition-all duration-300 flex items-start gap-3.5 overflow-hidden"
+                    className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 flex items-start gap-2.5"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <div className="w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-blue-600 text-slate-600 group-hover:text-white flex items-center justify-center shrink-0 font-bold text-xs transition-colors duration-300 shadow-xs">
-                      {content['home.global-relations-section.text.0'] ?? '0'}{idx + 1}
-                    </div>
-
-                    <div className="space-y-0.5 pt-0.5">
-                      <p className="text-xs sm:text-sm font-medium text-slate-700 group-hover:text-slate-900 leading-snug transition-colors">
-                        {point.text}
-                      </p>
-                    </div>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-[11px]">
+                      0{idx + 1}
+                    </span>
+                    <p className="text-xs font-medium text-slate-700 leading-snug">
+                      {translate(point.text)}
+                    </p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="lg:col-span-6 flex justify-center relative pt-4 lg:pt-0">
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-100 via-indigo-100 to-sky-100 rounded-3xl blur-2xl opacity-60 pointer-events-none" />
-
-              <div className="relative w-full max-w-[500px] bg-white rounded-3xl p-3 sm:p-4 border border-slate-200/80 shadow-xl shadow-slate-200/50">
-                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
+            <div className="lg:col-span-6 flex justify-center">
+              <div className="relative w-full max-w-[460px] bg-slate-50 rounded-3xl p-3 border border-slate-200/80 shadow-md">
+                <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-white flex items-center justify-center">
                   <Image
                     src={content['global-relations-section.image.src'] ?? "/images/global-map.png"}
-                    alt={content['home.global-relations-section.alt.global-world-map'] ?? 'Global World Map'}
+                    alt={translate(content['home.global-relations-section.alt.global-world-map'] ?? 'Global World Map')}
                     fill
                     unoptimized
-                    className="object-contain p-2 hover:scale-105 transition-transform duration-700 ease-out"
+                    className="object-contain p-2"
                   />
                 </div>
-
-                <div className="absolute -top-3 -right-3 bg-white/95 backdrop-blur-md border border-slate-200/90 px-3 py-1.5 rounded-2xl shadow-lg hidden sm:flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                    <Globe2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{content['home.global-relations-section.text.network'] ?? 'Network'}</p>
-                    <p className="text-xs font-extrabold text-slate-900">{content['home.global-relations-section.text.50-global-partners'] ?? '50+ Global Partners'}</p>
-                  </div>
-                </div>
-
-                <div className="absolute -bottom-3 -left-3 bg-white/95 backdrop-blur-md border border-slate-200/90 px-3 py-1.5 rounded-2xl shadow-lg hidden sm:flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{content['home.global-relations-section.text.compliance'] ?? 'Compliance'}</p>
-                    <p className="text-xs font-extrabold text-slate-900">{content['home.global-relations-section.text.100-regulated'] ?? '100% Regulated'}</p>
-                  </div>
+                <div className="mt-2.5 flex items-center justify-between px-2 text-xs font-bold text-slate-700">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Globe2 className="w-3.5 h-3.5 text-blue-600" />
+                    {translate(content['home.global-relations-section.text.50-global-partners'] ?? '50+ Global Partners')}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-emerald-700">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    {translate(content['home.global-relations-section.text.100-regulated'] ?? '100% Regulated')}
+                  </span>
                 </div>
               </div>
             </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ================= HOW WE ENABLE GLOBAL GROWTH ================= */}
-      <section className="bg-gradient-to-b from-slate-50 via-blue-50/20 to-white py-12 lg:py-14 px-6 relative overflow-hidden border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto space-y-8 relative z-10">
-
-          <div className="text-center max-w-3xl mx-auto space-y-2">
-            <span className="inline-block px-3.5 py-1 rounded-full bg-blue-100/80 border border-blue-200/90 text-blue-700 text-xs font-black tracking-widest uppercase shadow-xs">
-              {content['home.how-we-enable-global-growth.text.end-to-end-methodology'] ?? 'End-to-End Methodology\r'}</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-              {content['home.how-we-enable-global-growth.text.how-we-enable'] ?? 'How We Enable '}<span className="bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent">{content['home.how-we-enable-global-growth.text.global-growth'] ?? 'Global Growth'}</span>
-            </h2>
-            <p className="text-slate-500 text-xs md:text-sm max-w-xl mx-auto font-normal">
-              {content['home.how-we-enable-global-growth.text.metodologi-terstruktur-untuk-mendukung-akseleras'] ?? 'Metodologi terstruktur untuk mendukung akselerasi bisnis ke ranah global secara berkelanjutan.\r'}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 pt-2">
             {GLOBAL_STEPS.map((item, index) => {
               const IconComponent = item.icon;
-
               return (
                 <div
                   key={index}
-                  className={`group rounded-3xl p-5 transition-all duration-500 flex flex-col justify-between border relative overflow-hidden ${
+                  className={`rounded-2xl p-4 border flex flex-col justify-between ${
                     item.isActive
-                      ? 'bg-gradient-to-b from-blue-600 via-blue-700 to-blue-800 text-white border-blue-500 shadow-2xl shadow-blue-500/30 lg:-translate-y-2 z-10'
-                      : 'bg-white border-slate-200/90 text-slate-700 hover:border-blue-300 hover:shadow-xl hover:-translate-y-1.5'
+                      ? 'bg-gradient-to-b from-blue-600 to-blue-800 text-white border-blue-500 shadow-lg'
+                      : 'bg-slate-50/70 border-slate-200/90 text-slate-700'
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`text-[10px] font-extrabold tracking-widest px-2.5 py-0.5 rounded-full uppercase border ${
-                        item.isActive ? 'bg-white/20 border-white/30 text-white' : 'bg-blue-50 border-blue-100 text-blue-600'
+                    <div className="flex items-center justify-between mb-2.5">
+                      <span className={`text-[10px] font-extrabold tracking-widest px-2 py-0.5 rounded-full uppercase ${
+                        item.isActive ? 'bg-white/20 text-white' : 'bg-blue-100/80 text-blue-700'
                       }`}>
-                        {content['home.how-we-enable-global-growth.text.step'] ?? 'STEP '}{item.step}
+                        {translate("STEP")} {item.step}
                       </span>
-                      <div className={`p-2.5 rounded-2xl ${item.isActive ? 'bg-white/20 text-white' : 'bg-slate-50 text-slate-600 group-hover:text-blue-600 group-hover:bg-blue-50'} transition-colors`}>
-                        <IconComponent className="w-4 h-4 stroke-[1.8]" />
-                      </div>
+                      <IconComponent className={`w-4 h-4 ${item.isActive ? 'text-white' : 'text-blue-600'}`} />
                     </div>
-
-                    <h3 className={`text-sm md:text-base font-extrabold leading-snug whitespace-pre-line mb-2 ${item.isActive ? 'text-white' : 'text-slate-900'}`}>
-                      {item.title}
+                    <h3 className={`text-xs sm:text-sm font-extrabold leading-snug whitespace-pre-line mb-1 ${item.isActive ? 'text-white' : 'text-slate-900'}`}>
+                      {translate(item.title)}
                     </h3>
-                    <p className={`text-xs leading-relaxed font-normal ${item.isActive ? 'text-blue-100' : 'text-slate-500'}`}>
-                      {item.desc}
+                    <p className={`text-[11px] leading-relaxed ${item.isActive ? 'text-blue-100' : 'text-slate-500'}`}>
+                      {translate(item.desc)}
                     </p>
                   </div>
-
-                  <div className={`mt-6 pt-3 border-t flex items-center justify-between text-[11px] font-semibold ${item.isActive ? 'border-white/20' : 'border-slate-100'}`}>
-                    {item.isActive && (
-                      <span className="text-amber-300 font-black flex items-center gap-1.5 animate-pulse" >
-                        <CheckCircle2 className="w-4 h-4 text-amber-300 fill-amber-300/20"  /> {content['home.how-we-enable-global-growth.text.active'] ?? 'Active\r'}</span>
-                    )}
-                  </div>
+                  {item.isActive && (
+                    <div className="mt-3 pt-2 border-t border-white/20 text-[10px] text-amber-300 font-black flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> {translate(content['home.how-we-enable-global-growth.text.active'] ?? 'Active')}
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
-
         </div>
       </section>
 
-      {/* ================= PORTFOLIO SECTION ================= */}
-      <section className="bg-white py-12 lg:py-14 px-6 border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center space-y-1.5">
-            <span className="inline-block px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-600 text-xs font-black tracking-wider uppercase">
-              {content['home.portfolio-section.text.showcase-works'] ?? 'Showcase & Works\r'}</span>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              {content['home.portfolio-section.text.our-portfolios'] ?? 'Our Portfolios\r'}</h2>
-            <p className="text-sm text-slate-500">
-              {content['home.portfolio-section.text.dokumentasi-antarmuka-dan-hasil-kerja-sistem-yan'] ?? 'Dokumentasi antarmuka dan hasil kerja sistem yang telah kami kembangkan\r'}</p>
+      {/* ================= 5. PORTFOLIO SECTION ================= */}
+      <section id="portfolios" className="bg-slate-50/50 py-10 px-6 border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <div className="text-center space-y-1">
+            <span className="inline-block px-3 py-0.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-600 text-[11px] font-black tracking-wider uppercase">
+              {translate(content['home.portfolio-section.text.showcase-works'] ?? 'Showcase & Works')}
+            </span>
+            <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">
+              {translate(content['home.portfolio-section.text.our-portfolios'] ?? 'Our Portfolios')}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500">
+              {translate(content['home.portfolio-section.text.dokumentasi-antarmuka-dan-hasil-kerja-sistem-yan'] ?? 'Documentation of interfaces and the systems we have developed.')}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {portfolios.map((item) => (
-              <div
-                key={item.id}
-                className="group relative bg-slate-900 rounded-3xl p-3.5 h-[300px] sm:h-[350px] shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-slate-800 flex flex-col justify-between"
-              >
-                <div className="relative w-full h-[80%] rounded-2xl overflow-hidden bg-white flex items-center justify-center">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    quality={100}
-                    unoptimized
-                    className="object-contain p-2 group-hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {portfolios.map((item) => {
+              const disabled = isDisabledPortfolio(item.title);
 
-                <div className="px-2 py-1 flex items-center justify-between text-white">
-                  <div>
-                    <p className="text-[10px] font-bold tracking-widest text-sky-400 uppercase">{item.category}</p>
-                    <h3 className="text-sm font-extrabold">{item.title}</h3>
+              if (disabled) {
+                return (
+                  <div
+                    key={item.id}
+                    className="relative bg-slate-900 rounded-2xl p-3 h-[260px] sm:h-[290px] shadow-md overflow-hidden border border-slate-800 flex flex-col justify-between select-none"
+                  >
+                    <div className="relative w-full h-[78%] rounded-xl overflow-hidden bg-white flex items-center justify-center">
+                      <Image
+                        src={item.image}
+                        alt={translate(item.title)}
+                        fill
+                        quality={100}
+                        unoptimized
+                        className="object-contain p-2"
+                      />
+                    </div>
+
+                    <div className="px-2 py-1 flex items-center justify-between text-white">
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest text-sky-400 uppercase">{translate(item.category)}</p>
+                        <h3 className="text-sm font-extrabold">{translate(item.title)}</h3>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
-                    <ArrowUpRight className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                );
+              }
+
+              return (
+                <Link
+                  key={item.id}
+                  href={`/portfolio/${encodeURIComponent(String(item.id))}`}
+                  scroll={false}
+                  onClick={handleCardClick}
+                  aria-label={`${translate("View portfolio details:")} ${translate(item.title)}`}
+                  className="group relative bg-slate-900 rounded-2xl p-3 h-[260px] sm:h-[290px] shadow-md hover:shadow-xl transition-all overflow-hidden border border-slate-800 flex flex-col justify-between cursor-pointer"
+                >
+                  <div className="relative w-full h-[78%] rounded-xl overflow-hidden bg-white flex items-center justify-center">
+                    <Image
+                      src={item.image}
+                      alt={translate(item.title)}
+                      fill
+                      quality={100}
+                      unoptimized
+                      className="object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                </div>
-              </div>
-            ))}
+
+                  <div className="px-2 py-1 flex items-center justify-between text-white">
+                    <div>
+                      <p className="text-[10px] font-bold tracking-widest text-sky-400 uppercase">{translate(item.category)}</p>
+                      <h3 className="text-sm font-extrabold group-hover:text-sky-300 transition-colors">{translate(item.title)}</h3>
+                    </div>
+                    <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                      <ArrowUpRight className="w-3.5 h-3.5 text-white" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
           {portfolioError ? (
-            <p role="alert" className="text-center text-xs text-rose-600 py-6">{portfolioError}</p>
+            <p role="alert" className="text-center text-xs text-rose-600 py-4">{portfolioError}</p>
           ) : portfolios.length === 0 ? (
-            <p className="text-center text-xs text-slate-400 py-6">{content['home.portfolio-section.text.portofolio-belum-tersedia'] ?? 'Portofolio belum tersedia.'}</p>
+            <p className="text-center text-xs text-slate-400 py-4">{translate(content['home.portfolio-section.text.portofolio-belum-tersedia'] ?? 'There are no portfolios available yet.')}</p>
           ) : null}
         </div>
       </section>
 
-      {/* ================= CTA SECTION ================= */}
-      <section className="py-12 lg:py-14 px-6 bg-gradient-to-b from-white to-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-6 md:p-12 shadow-2xl border border-blue-700/50 flex flex-col lg:flex-row items-center justify-between gap-8">
-
-            <div className="max-w-xl space-y-4 text-center lg:text-left z-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/20 text-sky-200 text-xs font-semibold backdrop-blur-md">
-                <Zap className="w-4 h-4 text-amber-300 fill-amber-300 animate-bounce" />
-                <span>{content['home.cta-section.text.scalable-reliable-solutions'] ?? 'Scalable & Reliable Solutions'}</span>
+      {/* ================= 6. CTA SECTION ================= */}
+      <section className="py-10 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-6 md:p-10 shadow-xl border border-blue-700/50 flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="max-w-xl space-y-3 text-center lg:text-left z-10">
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/10 border border-white/20 text-sky-200 text-xs font-semibold">
+                <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                <span>{translate(content['home.cta-section.text.scalable-reliable-solutions'] ?? 'Scalable & Reliable Solutions')}</span>
               </div>
 
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
-                {content['home.cta-section.text.ready-to-scale-your'] ?? 'Ready to Scale Your '}<span className="text-amber-300 block sm:inline">{content['home.cta-section.text.business-operations'] ?? 'Business Operations?'}</span>
+              <h2 className="text-2xl md:text-4xl font-black tracking-tight leading-tight">
+                {translate(content['home.cta-section.text.ready-to-scale-your'] ?? 'Ready to Scale Your ')}
+                <span className="text-amber-300">{translate(content['home.cta-section.text.business-operations'] ?? 'Business Operations?')}</span>
               </h2>
 
-              <p className="text-xs md:text-sm text-blue-100 leading-relaxed font-normal">
-                {content['home.cta-section.text.mulai-transformasi-efisiensi-operasional-dan-tal'] ?? 'Mulai transformasi efisiensi operasional dan talenta terbaik bisnis Anda hari ini bersama tim profesional kami.\r'}</p>
+              <p className="text-xs md:text-sm text-blue-100 leading-relaxed">
+                {translate(content['home.cta-section.text.mulai-transformasi-efisiensi-operasional-dan-tal'] ?? 'Begin transforming operational efficiency and finding the best talent for your business with our professional team.')}
+              </p>
 
               <div className="pt-1">
                 <Link
                   href={content['home.cta-section.href.contact'] ?? '/contact'}
-                  className="relative group overflow-hidden inline-flex items-center gap-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold px-7 py-3.5 rounded-full text-xs md:text-sm transition-all shadow-xl hover:shadow-2xl hover:scale-105 cursor-pointer"
+                  className="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold px-6 py-3 rounded-full text-xs md:text-sm transition-all shadow-lg cursor-pointer"
                 >
-                  <span className="relative z-10">{content['home.cta-section.text.hubungi-kami-sekarang'] ?? 'Hubungi Kami Sekarang'}</span>
-                  <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1.5 transition-transform" />
+                  <span>{translate(content['home.cta-section.text.hubungi-kami-sekarang'] ?? 'Contact Us Now')}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
 
-            <div className="relative w-full lg:w-1/2 h-[240px] md:h-[280px] rounded-2xl overflow-hidden border border-white/20 shadow-2xl group">
+            <div className="relative w-full lg:w-5/12 h-[200px] md:h-[230px] rounded-2xl overflow-hidden border border-white/20 shadow-lg">
               <Image
                 src={content['cta-section.image.src'] ?? "/images/bitmap2.png"}
-                alt={content['home.cta-section.alt.discussion'] ?? 'Discussion'}
+                alt={translate(content['home.cta-section.alt.discussion'] ?? 'Discussion')}
                 fill
                 quality={100}
                 unoptimized
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                className="object-cover"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ================= FEATURE HIGHLIGHTS SECTION ================= */}
-      <section className="bg-white py-12 px-6 border-t border-slate-200/80">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {FEATURE_HIGHLIGHTS.map((feature, idx) => {
-              const IconComponent = feature.icon;
-              return (
-                <Link
-                  key={idx}
-                  href={`/advantages/${feature.slug}`}
-                  aria-label={`Pelajari lebih lanjut: ${feature.title}`}
-                  className="bg-slate-50/70 rounded-3xl p-6 text-center border border-slate-200/80 hover:bg-white hover:shadow-xl hover:border-blue-300 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center group"
-                >
-                  <div className={`w-12 h-12 ${feature.bgColor} border rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-xs`}>
-                    <IconComponent className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-base font-extrabold text-slate-900 mb-1.5 group-hover:text-blue-600 transition-colors leading-snug">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-500 text-xs leading-relaxed font-normal">
-                    {feature.description}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Dynamic Keyframes Animation Injection */}
       <style jsx global>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-12px); }
+          50% { transform: translateY(-8px); }
         }
         @keyframes floatDelayed {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(12px); }
+          50% { transform: translateY(8px); }
         }
         .animate-float {
           animation: float 5s ease-in-out infinite;
@@ -1302,7 +1159,6 @@ export default function Page() {
           animation: floatDelayed 6s ease-in-out infinite;
         }
       `}</style>
-
     </div>
   );
 }

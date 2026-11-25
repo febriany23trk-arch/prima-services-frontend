@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePageContent } from '@/lib/use-page-content';
+import { useLocale } from '@/lib/i18n';
 import {
   Ticket,
   Laptop,
@@ -27,7 +28,7 @@ import {
 
 export default function ITManagedServicesPage() {
   const { content, error } = usePageContent('solutions-it');
-  const [language] = useState<'id' | 'en'>('id');
+  const { locale: language } = useLocale();
   const [activeTab, setActiveTab] = useState<'desk' | 'asset' | 'sec'>('desk');
   const [activeModule, setActiveModule] = useState<'itsm' | 'asset' | 'endpoint'>('itsm');
 

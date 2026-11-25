@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SITE_PAGE_CONTENT_DEFAULTS } from "@/lib/page-content-defaults";
 import type { PageContent } from "@/lib/page-content-types";
 import { apiUrl } from "@/lib/api";
+import { translateText } from "@/lib/translations";
+import { useLocale } from "@/lib/i18n";
 
 export function usePageContent(pageSlug: keyof typeof SITE_PAGE_CONTENT_DEFAULTS) {
+  const { locale } = useLocale();
   const [content, setContent] = useState<PageContent>(SITE_PAGE_CONTENT_DEFAULTS[pageSlug]);
   const [error, setError] = useState("");
 
@@ -36,5 +39,16 @@ export function usePageContent(pageSlug: keyof typeof SITE_PAGE_CONTENT_DEFAULTS
     };
   }, [pageSlug]);
 
-  return { content, error };
+  const localizedContent = useMemo(
+    () => {
+      const localized: PageContent = {};
+      for (const [key, value] of Object.entries(content)) {
+        localized[key] = translateText(value, locale);
+      }
+      return localized;
+    },
+    [content, locale],
+  );
+
+  return { content: localizedContent, error };
 }

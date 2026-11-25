@@ -3,9 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePageContent } from "@/lib/use-page-content";
+import { useLocale } from "@/lib/i18n";
 
 export default function Footer() {
   const { content } = usePageContent("shared");
+  const { translate } = useLocale();
 
   const scrollToTop = () => {
     if (typeof window !== "undefined") {
@@ -259,7 +261,7 @@ export default function Footer() {
               {content["footer.terms.label"] ?? "Terms & Conditions"}
             </Link>
             <span className="max-w-md text-center text-[10px] leading-relaxed text-slate-400">
-              Statistik kunjungan mencatat IP, halaman, dan waktu; disimpan maksimal 1 tahun.
+              {translate("Statistik kunjungan mencatat IP, halaman, dan waktu; disimpan maksimal 1 tahun.")}
             </span>
 
             <button

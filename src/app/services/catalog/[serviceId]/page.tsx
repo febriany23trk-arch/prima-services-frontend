@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Code2, Palette } from "lucide-react";
 import { queryDatabase } from "@/lib/db";
+import { translateText } from "@/lib/translations";
 
 interface CatalogService {
   id: string;
@@ -113,6 +115,9 @@ export default async function CatalogServiceDetailPage({
   const service = await getCatalogService(serviceId);
   if (!service) notFound();
 
+  const savedLocale = (await cookies()).get("prima-services-locale")?.value;
+  const locale = savedLocale === "id" ? "id" : "en";
+  const translate = (text: string) => translateText(text, locale);
   const guidance = getServiceGuidance(service);
   const Icon = guidance.Icon;
 
@@ -124,26 +129,26 @@ export default async function CatalogServiceDetailPage({
           className="inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-slate-600 transition-colors hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Layanan
+          {translate("Kembali ke Layanan")}
         </Link>
 
         <section className="mt-8 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
           <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:p-14">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">
-                {service.category}
+                {translate(service.category)}
               </p>
               <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-5xl">
-                {service.name}
+                {translate(service.name)}
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-                {service.description || `Pelajari pendekatan Prima Services untuk ${service.name}.`}
+                {translate(service.description || `Pelajari pendekatan Prima Services untuk ${service.name}.`)}
               </p>
               <Link
                 href="/contact"
                 className="mt-8 inline-flex items-center gap-2 rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-blue-700/20 transition-colors hover:bg-blue-800"
               >
-                Konsultasikan Layanan
+                {translate("Konsultasikan Layanan")}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -158,12 +163,12 @@ export default async function CatalogServiceDetailPage({
         <section className="mt-12 grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">
-              Pendekatan kami
+              {translate("Pendekatan kami")}
             </p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-              Solusi yang berangkat dari kebutuhan Anda
+              {translate("Solusi yang berangkat dari kebutuhan Anda")}
             </h2>
-            <p className="mt-4 leading-7 text-slate-600">{guidance.intro}</p>
+            <p className="mt-4 leading-7 text-slate-600">{translate(guidance.intro)}</p>
           </div>
           <div className="grid gap-4">
             {guidance.benefits.map((benefit) => (
@@ -172,21 +177,21 @@ export default async function CatalogServiceDetailPage({
                 className="flex gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
               >
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
-                <p className="text-sm leading-6 text-slate-700">{benefit}</p>
+                <p className="text-sm leading-6 text-slate-700">{translate(benefit)}</p>
               </article>
             ))}
           </div>
         </section>
 
         <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-10">
-          <h2 className="text-xl font-bold sm:text-2xl">Tahapan layanan</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">{translate("Tahapan layanan")}</h2>
           <ol className="mt-6 grid gap-4 sm:grid-cols-2">
             {guidance.steps.map((step, index) => (
               <li key={step} className="flex gap-4 rounded-2xl bg-slate-50 p-4">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-sm font-bold text-blue-800">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <p className="self-center text-sm leading-6 text-slate-700">{step}</p>
+                <p className="self-center text-sm leading-6 text-slate-700">{translate(step)}</p>
               </li>
             ))}
           </ol>
@@ -194,16 +199,16 @@ export default async function CatalogServiceDetailPage({
 
         <section className="mt-12 flex flex-col items-start justify-between gap-5 rounded-3xl bg-slate-900 p-7 text-white sm:flex-row sm:items-center sm:p-10">
           <div>
-            <h2 className="text-xl font-bold sm:text-2xl">Diskusikan kebutuhan layanan Anda</h2>
+            <h2 className="text-xl font-bold sm:text-2xl">{translate("Diskusikan kebutuhan layanan Anda")}</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
-              Hubungi tim Prima Services untuk membahas ruang lingkup dan pendekatan yang sesuai.
+              {translate("Hubungi tim Prima Services untuk membahas ruang lingkup dan pendekatan yang sesuai.")}
             </p>
           </div>
           <Link
             href="/contact"
             className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-colors hover:bg-blue-50"
           >
-            Hubungi Kami
+            {translate("Hubungi Kami")}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </section>

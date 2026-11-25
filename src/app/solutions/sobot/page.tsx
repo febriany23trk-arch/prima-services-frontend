@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePageContent } from '@/lib/use-page-content';
+import LocalizedContent from '@/components/LocalizedContent';
 import {
   ArrowRight,
   ShieldCheck,
@@ -134,6 +135,7 @@ export default function SobotSolutionPage() {
   );
 
   return (
+    <LocalizedContent>
     <main className="min-h-screen bg-[#05070c] font-sans pt-4 sm:pt-6 pb-28 px-4 sm:px-6 lg:px-12 text-slate-100 relative overflow-hidden selection:bg-orange-500 selection:text-white">
       {error && (
         <p role="alert" className="relative z-20 mx-auto mb-3 max-w-7xl text-sm text-amber-300">
@@ -483,5 +485,6 @@ export default function SobotSolutionPage() {
 
       </div>
     </main>
+    </LocalizedContent>
   );
 }

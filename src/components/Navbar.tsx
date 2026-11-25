@@ -6,31 +6,70 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { usePageContent } from "@/lib/use-page-content";
+import { useLocale } from "@/lib/i18n";
+
+function LanguageSwitcher({ mobile = false }: { mobile?: boolean }) {
+  const { locale, setLocale, translate } = useLocale();
+
+  return (
+    <div
+      className={`inline-flex items-center rounded-full border border-slate-200 bg-white p-1 ${
+        mobile ? "w-full justify-center" : "shrink-0"
+      }`}
+      role="group"
+      aria-label={translate("Select language")}
+    >
+      {(["id", "en"] as const).map((language) => (
+        <button
+          key={language}
+          type="button"
+          onClick={() => setLocale(language)}
+          aria-pressed={locale === language}
+          aria-label={language === "id" ? "Bahasa Indonesia" : "English"}
+          className={`min-w-10 rounded-full px-2.5 py-1.5 text-xs font-bold transition-colors ${
+            locale === language
+              ? "bg-[#2152a3] text-white"
+              : "text-slate-600 hover:bg-slate-100"
+          }`}
+        >
+          {language.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function PageNavbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const { content } = usePageContent("shared");
+  const { translate } = useLocale();
 
   const navLinks = [
     {
-      name: content["navigation.home.label"] ?? "Home",
+      name: translate(content["navigation.home.label"] ?? "Home"),
       href: content["navigation.home.href"] ?? "/",
     },
     {
-      name: content["navigation.about.label"] ?? "About Us",
+      name: translate(content["navigation.about.label"] ?? "About Us"),
       href: content["navigation.about.href"] ?? "/about",
     },
     {
-      name: content["navigation.services.label"] ?? "Services",
+      name: translate(content["navigation.services.label"] ?? "Services"),
       href: content["navigation.services.href"] ?? "/services",
     },
     {
-      name: content["navigation.contact.label"] ?? "Contact",
+      name: translate(content["navigation.career.label"] ?? "Career"),
+      href: content["navigation.career.href"] ?? "/career",
+    },
+    {
+      name: translate(content["navigation.contact.label"] ?? "Contact"),
       href: content["navigation.contact.href"] ?? "/contact",
     },
   ];
-  const ctaLabel = content["navigation.cta.label"] ?? "Free Consultant Now";
+  const ctaLabel = translate(
+    content["navigation.cta.label"] ?? "Free Consultant Now",
+  );
   const ctaHref = content["navigation.cta.href"] ?? "/contact";
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -56,7 +95,7 @@ export default function PageNavbar() {
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href ||
-              (link.href === "/about" && pathname.startsWith("/about"));
+              (link.href !== "/" && pathname.startsWith(link.href));
 
             return (
               <Link
@@ -80,7 +119,8 @@ export default function PageNavbar() {
         </nav>
 
         {/* CTA BUTTON (DESKTOP) */}
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-3">
+          <LanguageSwitcher />
           <Link
             href={ctaHref}
             className="inline-flex items-center gap-2 bg-[#2152a3] hover:bg-[#1a4387] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200"
@@ -96,7 +136,7 @@ export default function PageNavbar() {
             onClick={toggleMenu}
             type="button"
             className="p-2 text-slate-600 hover:text-slate-900 focus:outline-none"
-            aria-label="Toggle navigation menu"
+            aria-label={translate("Toggle navigation menu")}
           >
             {isOpen ? (
               <X className="w-6 h-6" />
@@ -115,7 +155,7 @@ export default function PageNavbar() {
             {navLinks.map((link) => {
               const isActive =
                 pathname === link.href ||
-                (link.href === "/about" && pathname.startsWith("/about"));
+                (link.href !== "/" && pathname.startsWith(link.href));
 
               return (
                 <Link
@@ -143,6 +183,10 @@ export default function PageNavbar() {
               <span>{ctaLabel}</span>
               <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
             </Link>
+          </div>
+
+          <div className="pt-2">
+            <LanguageSwitcher mobile />
           </div>
         </div>
       )}

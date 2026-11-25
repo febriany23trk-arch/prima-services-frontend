@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePageContent } from '@/lib/use-page-content';
+import { useLocale } from '@/lib/i18n';
+import LocalizedContent from '@/components/LocalizedContent';
 import {
   ShieldCheck,
   FileCheck2,
@@ -29,7 +31,7 @@ import {
 
 export default function IsoCompliancePage() {
   const { content, error } = usePageContent('solutions-iso');
-  const [language] = useState<'id' | 'en'>('id');
+  const { locale: language } = useLocale();
   const [selectedStandard, setSelectedStandard] = useState<'27001' | '20000' | '22301' | '27701'>('27001');
   const [activeStep, setActiveStep] = useState<number>(1);
   const [companySize, setCompanySize] = useState<number>(50);
@@ -106,6 +108,7 @@ export default function IsoCompliancePage() {
   };
 
   return (
+    <LocalizedContent>
     <main className="min-h-screen bg-[#020617] font-sans pt-10 pb-28 px-3 sm:px-6 text-slate-100 relative overflow-hidden selection:bg-emerald-500 selection:text-white">
       {error && (
         <p role="alert" className="relative z-20 mx-auto mb-3 max-w-7xl text-sm text-amber-300">
@@ -576,5 +579,6 @@ export default function IsoCompliancePage() {
 
       </div>
     </main>
+    </LocalizedContent>
   );
 }

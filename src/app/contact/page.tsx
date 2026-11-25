@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePageContent } from "@/lib/use-page-content";
+import { useLocale } from "@/lib/i18n";
 import { apiUrl } from "@/lib/api";
 import {
   Mail,
@@ -37,6 +38,7 @@ interface ContactInfo {
 
 export default function ContactPage() {
   const { content, error } = usePageContent('contact');
+  const { translate } = useLocale();
   const SERVICES_OPTIONS = [
     content['services_options.01'] ?? 'BPO & Dedicated Team',
     content['services_options.02'] ?? 'Custom Software Development',
@@ -363,12 +365,12 @@ export default function ContactPage() {
                   <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
                   <div>
                     <p className="font-extrabold text-emerald-900">
-                      {notificationSent ? "Pesan terkirim ke email admin" : "Pesan berhasil disimpan"}
+                      {translate(notificationSent ? "Pesan terkirim ke email admin" : "Pesan berhasil disimpan")}
                     </p>
                     <p className="text-xs text-emerald-700 mt-0.5">
-                      {notificationSent
+                      {translate(notificationSent
                         ? "Inquiry juga tersimpan di portal admin. Tim kami akan segera menghubungi Anda."
-                        : "Inquiry tersimpan dan dapat dilihat di portal admin."}
+                        : "Inquiry tersimpan dan dapat dilihat di portal admin.")}
                     </p>
                     {notificationWarning && (
                       <p className="text-xs text-amber-700 mt-2" role="status">

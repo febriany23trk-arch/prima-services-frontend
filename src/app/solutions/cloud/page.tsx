@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePageContent } from '@/lib/use-page-content';
+import LocalizedContent from '@/components/LocalizedContent';
 import {
   ArrowRight,
   Rocket,
@@ -70,6 +71,7 @@ export default function GoogleCloudPlatformPage() {
   const displayedLogs = logs.map((log) => initialLogContent.get(log) ?? log);
 
   return (
+    <LocalizedContent>
     <main className="min-h-screen bg-[#050811] font-sans pt-16 pb-8 px-2 sm:px-4 text-slate-100 relative overflow-hidden">
       {error && (
         <p role="alert" className="relative z-20 mx-auto mb-3 max-w-7xl text-sm text-amber-300">
@@ -455,5 +457,6 @@ export default function GoogleCloudPlatformPage() {
 
       </div>
     </main>
+    </LocalizedContent>
   );
 }
